@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.idea/
+/test.json
+/celerybeat-schedule
+/test.py
+/tw_analysis/settings/local_settings.py
