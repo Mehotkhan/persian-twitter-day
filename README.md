@@ -13,7 +13,7 @@ twitter account :
 # how to run :
 * python3.6 manage.py runserver
 * celery -A tw_analysis worker -B 
-* celery -A proj beat -l info -S django
+* celery -A tw_analysis beat -l info -S django
 # Demo:
 
 * text cloud from 1449 tweets on Fri,09 Tir 1396
