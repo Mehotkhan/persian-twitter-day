@@ -1,3 +1,5 @@
+import os
+
 import tweepy
 
 consumer_key = ""
@@ -51,3 +53,11 @@ mongodb_authentication_source = ''
 mongodb_username = ''
 mongodb_password = '',
 mongodb_host = ''
+
+# PROXY SETTINGS
+# http proxy
+# proxy = ''
+# os.environ['http_proxy'] = proxy
+# os.environ['HTTP_PROXY'] = proxy
+# os.environ['https_proxy'] = proxy
+# os.environ['HTTPS_PROXY'] = proxy
