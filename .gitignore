@@ -6,3 +6,5 @@ __pycache__/
 /celerybeat-schedule
 /test.py
 /tw_analysis/settings/local_settings.py
+/sample.json
+/data.json

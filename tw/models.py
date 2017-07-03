@@ -1,13 +1,13 @@
-import datetime
+import datetime, pytz
 import json
+import re
 import time
 import sys
-# import tweepy
-# from pymongo import MongoClient
+from tw_analysis.settings.base import TIME_ZONE
 from tweepy import StreamListener, Stream, OAuthHandler
-
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import *
+from django.utils import timezone
 
 
 class FetchTweets(object):
@@ -62,13 +62,30 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         data_json = json.loads(data)
         if data_json.get('text'):
+            # # import json
+            # with open('data.json', 'w') as outfile:
+            #     json.dump(data_json, outfile)
+            #     exit()
             tweet = Analysis()
+            tweet.tweet_id = data_json['id']
             tweet.text = data_json['text']
-            tweet.username = data_json['user']['name']
+            tweet.user_name = data_json['user']['name']
             tweet.user_id = data_json['user']['id']
             tweet.user_screen_name = data_json['user']['screen_name']
-            tweet.create_date = data_json['created_at']
-            tweet.create_date = datetime.datetime.strptime(data_json['created_at'], '%a %b %d %H:%M:%S +0000 %Y')
+            tweet.user_location = data_json['user']['location']
+            tweet.user_created_at = datetime.datetime.strptime(data_json['user']['created_at'],
+                                                               '%a %b %d %H:%M:%S +0000 %Y')
+            tweet.user_description = data_json['user']['description']
+            tweet.user_followers_count = data_json['user']['followers_count']
+            tweet.user_friends_count = data_json['user']['friends_count']
+            tweet.user_statuses_count = data_json['user']['statuses_count']
+            tweet.user_favourites_count = data_json['user']['favourites_count']
+            tweet.create_date_timestamp_ms = data_json['timestamp_ms']
+            tweet.create_date = datetime.datetime.strptime(data_json['created_at'],
+                                                           '%a %b %d %H:%M:%S +0000 %Y')
+            tweet.source = re.findall(r'<a .*>(.*)</a>', data_json['source'])[0]
+            tweet.is_quote_status = data_json['is_quote_status']
+            tweet.media_type = data_json['entities']['media'] if data_json['entities'].get('media') else ''
             tweet.save()
             print('data saved')
         else:

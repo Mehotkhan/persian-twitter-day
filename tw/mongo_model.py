@@ -14,8 +14,20 @@ class Analysis(Document):
     meta = {
         "db_alias": "stream_db"
     }
+    tweet_id = fields.IntField()
     text = fields.StringField()
-    username = fields.StringField()
+    user_name = fields.StringField()
     user_id = fields.IntField()
     user_screen_name = fields.StringField()
+    user_location = fields.StringField()
+    user_created_at = fields.DateTimeField()
+    user_description = fields.StringField()
+    user_followers_count = fields.IntField()
+    user_friends_count = fields.IntField()
+    user_statuses_count = fields.IntField()
+    user_favourites_count = fields.IntField()
     create_date = fields.DateTimeField()
+    create_date_timestamp_ms = fields.IntField()
+    source = fields.StringField()
+    media_type = fields.DynamicField()
+    is_quote_status = fields.BooleanField()

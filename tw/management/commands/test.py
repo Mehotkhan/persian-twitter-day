@@ -4,21 +4,17 @@ import jdatetime
 from django.core.management.base import BaseCommand
 from tw.models import FetchTweets
 from django_celery_beat.models import PeriodicTask, PeriodicTasks
+from django.utils import timezone
+import pytz
 
 
 class Command(BaseCommand):
     help = 'fetch today tweets'
 
     def handle(self, *args, **options):
-        print(datetime.datetime.now().strftime('%d-%b-%Y | %H:%M:%S'))
-        yesterday = datetime.date.today() - datetime.timedelta(1)
-        date = jdatetime.date.fromgregorian(date=yesterday)
-        print(date)
-        status_text = "ابر کلمات از {} تویت در تاریخ {}".format(50,
-                                                                date.strftime(
-                                                                    "%d-%b-%Y "))
-        print(status_text)
+        current_tz = timezone.get_current_timezone()
+        # tz = timezone('America/St_Johns')
+        time = datetime.datetime.strptime('Mon Jul 03 00:48:19 +0000 2017',
+                                          '%a %b %d %H:%M:%S +0000 %Y')
 
-        # task_update = PeriodicTask.objects.all()
-        # task_update.update(last_run_at=None)
-        # # task_update.changed()
+        print(pytz.utc.localize(time, is_dst=None).astimezone(current_tz))
