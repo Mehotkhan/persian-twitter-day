@@ -7,6 +7,8 @@ from os import path
 from wordcloud import WordCloud
 import arabic_reshaper
 from bidi.algorithm import get_display
+import pytz
+from dateutil import tz
 
 
 class TweetCloud(object):
@@ -24,24 +26,24 @@ class TweetCloud(object):
         return u'\u0600' <= s <= u'\u06FF'
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
-        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
+        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
                 self.from_date = datetime.date.today() - datetime.timedelta(1)
                 self.to_date = datetime.date.today()
-            elif isinstance(float, from_date) and to_date == "Today":
+            elif isinstance(from_date, float) and to_date == "Today":
                 self.from_date = datetime.date.today() + datetime.timedelta(from_date)
                 self.to_date = datetime.date.today()
         if from_time and to_time:
-            if isinstance(float, from_time) and to_time == "Now":
+            if isinstance(from_time, float) and to_time == "Now":
                 self.from_date = datetime.datetime.now() + datetime.timedelta(hours=from_time)
                 self.to_date = datetime.datetime.now()
 
         all_tweets = Analysis.objects(
-            Q(create_date__lt=self.to_date)
+            Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
             &
-            Q(create_date__gte=self.from_date)
+            Q(create_date__gte=self.from_date.replace(tzinfo=tz.tzlocal()))
 
         ).all()
         self.all_tweets_count = len(all_tweets)

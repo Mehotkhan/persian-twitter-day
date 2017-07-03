@@ -16,7 +16,7 @@ class Command(BaseCommand):
         print("You follow", len(friends), "users")
         while True:
             try:
-                user_follower = tweepy.Cursor(api.followers, screen_name=options['user_id']).items()
+                user_follower = tweepy.Cursor(api.friends, screen_name=options['user_id']).items()
                 # print('start following {} user'.format(len(list(user_follower))))
                 for follower in user_follower:
                     if follower.id != api.me().id:
