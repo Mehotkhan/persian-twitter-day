@@ -93,7 +93,7 @@ class TweetCloud(object):
             media_ids.append(res.media_id)
         yesterday = datetime.date.today() - datetime.timedelta(1)
         date = jdatetime.date.fromgregorian(date=yesterday)
-        status_text = "ابر کلمات از {} تویت در تاریخ {}".format(50,
+        status_text = "ابر کلمات از {} تویت در تاریخ {}".format(self.all_tweets_count,
                                                                 date.strftime(
                                                                     "%d-%b-%Y "))
         api.update_status(status=status_text, media_ids=media_ids)

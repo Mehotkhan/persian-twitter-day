@@ -17,8 +17,12 @@ class Command(BaseCommand):
         from_time = None
         if options['from_date'] == 0:
             from_date = None
+        else:
+            from_date = options['from_date']
         if options['from_time'] == 0:
             from_time = None
+        else:
+            from_time = options['from_time']
         command_cloud = TweetCloud()
         command_cloud.generate(from_date=from_date, from_time=from_time,
                                max_words=options['max_words'])

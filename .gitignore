@@ -8,3 +8,4 @@ __pycache__/
 /tw_analysis/settings/local_settings.py
 /sample.json
 /data.json
+/tw/*.png
