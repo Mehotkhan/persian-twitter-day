@@ -19,6 +19,12 @@ twitter account :
 * generate tweet clouds (from -2 day ago,from -0 hours ,1000 words) : python manage.py words_cloud -2 0 1000
 * generate tweet clouds (from 0 day ago - today,from -2.5 hours ,1000 words) : python manage.py words_cloud 0 -2.5 1000
 *
+# TODO 
+*  add sentiment analysis 
+*  daily report about what people think and what people say
+* add telegram connector for fetch data on telegram group ad channel
+* add webservice 
+* and more ;)
 
 # Demo:
 
