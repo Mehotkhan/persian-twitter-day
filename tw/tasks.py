@@ -21,13 +21,14 @@ def keep_alive():
 
 
 @shared_task
-def tweet_cloud(from_date=0, from_time=-24, max_words=1000):
+def tweet_cloud(from_date, from_time, max_words=1000):
     f_date = None
     f_time = None
     if from_date == 0:
         f_date = None
     else:
         f_date = from_date
+
     if from_time == 0:
         f_time = None
     else:
