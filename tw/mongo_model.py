@@ -1,6 +1,7 @@
 from mongoengine import Document, EmbeddedDocument, fields, register_connection
 from tw_analysis.settings.local_settings import mongodb_authentication_source, mongodb_host, mongodb_password, \
     mongodb_username
+from tw_analysis.settings.local_settings_sample import mongodb_port
 
 alias_lists = ['stream_db']  # list of aliases
 dbs = ['Analysis']  # list of databases
