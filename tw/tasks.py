@@ -21,7 +21,7 @@ def keep_alive():
 
 
 @shared_task
-def tweet_cloud(from_date=None, from_time=None, max_words=1000):
+def tweet_cloud(from_date=0, from_time=-24, max_words=1000):
     f_date = None
     f_time = None
     if from_date == 0:
@@ -33,6 +33,6 @@ def tweet_cloud(from_date=None, from_time=None, max_words=1000):
     else:
         from_time = from_time
     command_cloud = TweetCloud()
-    command_cloud.generate(from_date=None, from_time=-24,
+    command_cloud.generate(from_date=f_date, from_time=f_time,
                            max_words=max_words)
     command_cloud.send()
