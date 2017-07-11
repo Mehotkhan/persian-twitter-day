@@ -24,8 +24,6 @@ class Command(BaseCommand):
         else:
             from_time = options['from_time']
         command_cloud = TweetCloud()
-        print(from_time)
-        print(from_date)
         command_cloud.generate(from_date=from_date, from_time=from_time,
                                max_words=options['max_words'])
         command_cloud.send()

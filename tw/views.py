@@ -24,7 +24,7 @@ class TweetCloud(object):
         return u'\u0600' <= s <= u'\u06FF'
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
-        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
+        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
@@ -45,14 +45,13 @@ class TweetCloud(object):
         ).all()
         self.all_tweets_count = len(all_tweets)
         all_words = []
-        words = ''
         for item in all_tweets:
-            text = item.text.split()
-            for w in text:
+            tw_text = item.text.split()
+            for w in tw_text:
                 if self.is_perisan(w):
                     words = ''
                     words += ' ' + w
-            all_words.append(words)
+                    all_words.append(words)
 
         text = ''.join(all_words)
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
@@ -66,9 +65,9 @@ class TweetCloud(object):
             margin=0,
             # width=800,
             # height=800,
-            min_font_size=5,
+            min_font_size=10,
             max_font_size=100,
-            random_state=0,
+            random_state=1,
             background_color="white",
             mask=twitter_mask
         ).generate(text)
