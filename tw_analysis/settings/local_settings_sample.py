@@ -51,10 +51,11 @@ DATABASES = {
 # MongoDB
 mongodb_authentication_source = ''
 mongodb_username = ''
-mongodb_password = '',
+mongodb_password = ''
 mongodb_host = ''
+mongodb_port = ''
 
-REDIS= ''
+REDIS = ''
 # PROXY SETTINGS
 # http proxy
 # proxy = ''

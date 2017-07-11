@@ -7,7 +7,7 @@ dbs = ['Analysis']  # list of databases
 for alias, db in zip(alias_lists, dbs):
     register_connection(alias, db, authentication_source=mongodb_authentication_source, username=mongodb_username,
                         password=mongodb_password,
-                        host=mongodb_host)
+                        host=mongodb_host,port=mongodb_port)
 
 
 class Analysis(Document):
