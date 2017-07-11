@@ -27,12 +27,12 @@ def tweet_cloud(from_date, from_time, max_words=1000):
     if from_date == 0:
         f_date = None
     else:
-        f_date = from_date
+        f_date = float(from_date)
 
     if from_time == 0:
         f_time = None
     else:
-        f_time = from_time
+        f_time = float(from_time)
     command_cloud = TweetCloud()
     print('from task')
     print(f_date)
