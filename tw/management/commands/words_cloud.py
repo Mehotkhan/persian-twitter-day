@@ -28,4 +28,4 @@ class Command(BaseCommand):
         print(from_date)
         command_cloud.generate(from_date=from_date, from_time=from_time,
                                max_words=options['max_words'])
-        # command_cloud.send()
+        command_cloud.send()

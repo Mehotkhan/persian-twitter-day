@@ -24,10 +24,7 @@ class TweetCloud(object):
         return u'\u0600' <= s <= u'\u06FF'
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
-        print('im here')
-        print(from_date)
-        print(from_time)
-        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
+        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
@@ -40,15 +37,12 @@ class TweetCloud(object):
             if isinstance(from_time, float) and to_time == "Now":
                 self.from_date = datetime.datetime.now() + datetime.timedelta(hours=from_time)
                 self.to_date = datetime.datetime.now()
-        print(self.from_date)
-        print(self.to_date)
         all_tweets = Analysis.objects(
             Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
             &
             Q(create_date__gte=self.from_date.replace(tzinfo=tz.tzlocal()))
 
         ).all()
-        print('step2')
         self.all_tweets_count = len(all_tweets)
         all_words = []
         words = ''
@@ -65,7 +59,6 @@ class TweetCloud(object):
         # Generate a word cloud image
         STOPWORDS.add('می')
         stopwords = set(STOPWORDS)
-        print('step3')
         self.tweet_cloud = PersianWordCloud(
             only_persian=True,
             max_words=max_words,
@@ -79,7 +72,6 @@ class TweetCloud(object):
             background_color="white",
             mask=twitter_mask
         ).generate(text)
-        print('step3')
 
     def send(self):
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to send text CLOUD :*')
