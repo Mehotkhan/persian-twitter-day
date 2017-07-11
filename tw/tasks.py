@@ -31,7 +31,7 @@ def tweet_cloud(from_date=0, from_time=-24, max_words=1000):
     if from_time == 0:
         f_time = None
     else:
-        from_time = from_time
+        f_time = from_time
     command_cloud = TweetCloud()
     command_cloud.generate(from_date=f_date, from_time=f_time,
                            max_words=max_words)
