@@ -3,11 +3,10 @@ import jdatetime
 from mongoengine import Q
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import api, ADMIN_TW_ACCOUNT
+from persian_wordcloud.wordcloud import STOPWORDS, PersianWordCloud
 from os import path
-from wordcloud import WordCloud
-import arabic_reshaper
-from bidi.algorithm import get_display
-import pytz
+from PIL import Image
+import numpy as np
 from dateutil import tz
 
 
@@ -17,7 +16,6 @@ class TweetCloud(object):
         self.file_names = []
         self.d = path.dirname(__file__)
         self.all_tweets_count = None
-        self.font_path = path.join(self.d, 'fonts', 'Vazir-Light.ttf')
         self.from_date = None
         self.to_date = None
 
@@ -53,48 +51,50 @@ class TweetCloud(object):
             text = item.text.split()
             for w in text:
                 if self.is_perisan(w):
+                    words = ''
                     words += ' ' + w
-            try:
-                text_ = arabic_reshaper.reshape(words)
-                bidi_text = get_display(text_)
-                all_words.append(bidi_text)
-            except AssertionError:
-                exit()
+            all_words.append(words)
 
         text = ''.join(all_words)
-        stopwords = set([get_display(arabic_reshaper.reshape(x.strip())) for x in
-                         open((path.join(self.d, 'stop_words.txt')), encoding='utf-8').read().split('\n')])
-
-        self.tweet_cloud = WordCloud(
-            font_path=self.font_path,
+        twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
+        # Generate a word cloud image
+        STOPWORDS.add('می')
+        stopwords = set(STOPWORDS)
+        self.tweet_cloud = PersianWordCloud(
+            only_persian=True,
             max_words=max_words,
             stopwords=stopwords,
-            # mask=mask,
             margin=0,
-            width=800,
-            height=800,
-            min_font_size=1,
-            max_font_size=500,
-            background_color="black",
-            random_state=1
+            # width=800,
+            # height=800,
+            min_font_size=5,
+            max_font_size=100,
+            random_state=0,
+            background_color="white",
+            mask=twitter_mask
         ).generate(text)
 
     def send(self):
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to send text CLOUD :*')
-        # The pil way (if you don't have matplotlib)
-        filename = datetime.datetime.today().strftime('%Y-%m-%d')
-        image = (path.join(self.d, filename + '.png'))
+        filename = datetime.datetime.today().strftime('%Y-%m-%d-%H:%m')
+        image = (path.join(self.d, 'tmp/' + filename + '.png'))
         img = self.tweet_cloud.to_image()
         img.save(image)
-        self.file_names.append(path.join(self.d, filename + '.png'))
+        self.file_names.append(path.join(self.d, 'tmp/' + filename + '.png'))
         media_ids = []
         for file in self.file_names:
             res = api.media_upload(file)
             media_ids.append(res.media_id)
-        yesterday = datetime.date.today() - datetime.timedelta(1)
-        date = jdatetime.date.fromgregorian(date=yesterday)
-        status_text = "ابر کلمات از {} تویت در تاریخ {}".format(self.all_tweets_count,
-                                                                date.strftime(
-                                                                    "%d-%b-%Y "))
+        from_date = self.from_date.replace(tzinfo=tz.tzlocal())
+        to_date = self.to_date.replace(tzinfo=tz.tzlocal())
+        j_from_date = jdatetime.datetime.fromgregorian(datetime=from_date)
+        j_to_date = jdatetime.datetime.fromgregorian(datetime=to_date)
+        status_text = "ابر کلمات تولید شده از {} تویت از تاریخ {} تا تاریخ {}".format(
+            self.all_tweets_count,
+            j_from_date.strftime(
+                " %H:%m - %Y/%m/%d"),
+            j_to_date.strftime(
+                " %H:%m - %Y/%m/%d")
+        )
         api.update_status(status=status_text, media_ids=media_ids)
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hora , text cloud image sends :**')

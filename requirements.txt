@@ -13,3 +13,4 @@ python-bidi
 jdatetime
 wordcloud
 django-celery-beat==1.0.1
+persian_wordcloud

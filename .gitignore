@@ -10,3 +10,4 @@ __pycache__/
 /data.json
 /tw/*.png
 /env
+/tw/tmp/
