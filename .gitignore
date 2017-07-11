@@ -9,3 +9,4 @@ __pycache__/
 /sample.json
 /data.json
 /tw/*.png
+/env

@@ -6,6 +6,7 @@ from celery.signals import celeryd_init, worker_ready
 
 # set the default Django settings module for the 'celery' program.
 from tw.models import FetchStream, MessageBoot
+from tw_analysis.settings.local_settings import REDIS
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tw_analysis.settings.base')
 
@@ -26,7 +27,8 @@ def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
 
-app.conf.result_backend = 'redis://localhost:6379/0'
+app.conf.result_backend = REDIS
+
 
 # app.conf.beat_schedule = {
 #     'tweet_cloud': {

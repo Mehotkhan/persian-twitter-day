@@ -54,6 +54,7 @@ mongodb_username = ''
 mongodb_password = '',
 mongodb_host = ''
 
+REDIS= ''
 # PROXY SETTINGS
 # http proxy
 # proxy = ''
