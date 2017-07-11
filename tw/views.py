@@ -38,7 +38,9 @@ class TweetCloud(object):
             if isinstance(from_time, float) and to_time == "Now":
                 self.from_date = datetime.datetime.now() + datetime.timedelta(hours=from_time)
                 self.to_date = datetime.datetime.now()
-
+        print(self.from_date)
+        print(self.to_date)
+        exit()
         all_tweets = Analysis.objects(
             Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
             &
