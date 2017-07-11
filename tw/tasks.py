@@ -33,6 +33,9 @@ def tweet_cloud(from_date=0, from_time=-24, max_words=1000):
     else:
         f_time = from_time
     command_cloud = TweetCloud()
+    print('from task')
+    print(f_date)
+    print(f_time)
     command_cloud.generate(from_date=f_date, from_time=f_time,
                            max_words=max_words)
-    command_cloud.send()
+    # command_cloud.send()
