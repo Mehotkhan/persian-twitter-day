@@ -57,6 +57,20 @@ class TweetCloud(object):
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
         # Generate a word cloud image
         STOPWORDS.add('می')
+        STOPWORDS.add('ای')
+        STOPWORDS.add('یه')
+        STOPWORDS.add('سر')
+        STOPWORDS.add('کن')
+        STOPWORDS.add('رو')
+        STOPWORDS.add('من')
+        STOPWORDS.add('تر')
+        STOPWORDS.add('اگه')
+        STOPWORDS.add('کنم')
+        STOPWORDS.add('کنه')
+        STOPWORDS.add('پر')
+        STOPWORDS.add('لا')
+        STOPWORDS.add('فی')
+        STOPWORDS.add('چی')
         stopwords = set(STOPWORDS)
         self.tweet_cloud = PersianWordCloud(
             only_persian=True,
