@@ -71,6 +71,13 @@ class TweetCloud(object):
         STOPWORDS.add('لا')
         STOPWORDS.add('فی')
         STOPWORDS.add('چی')
+        STOPWORDS.add('تو')
+        STOPWORDS.add('فک')
+        STOPWORDS.add('الان')
+        STOPWORDS.add('اون')
+        STOPWORDS.add('کردن')
+        STOPWORDS.add('نمی')
+        STOPWORDS.add('های')
         stopwords = set(STOPWORDS)
         self.tweet_cloud = PersianWordCloud(
             only_persian=True,
