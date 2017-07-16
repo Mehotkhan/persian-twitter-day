@@ -11,3 +11,4 @@ __pycache__/
 /tw/*.png
 /env
 /tw/tmp/
+/tw/resources/postagger.model
