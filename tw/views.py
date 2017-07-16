@@ -8,6 +8,7 @@ from os import path
 from PIL import Image
 import numpy as np
 from dateutil import tz
+from tw.text_cleaner import FetchText
 
 
 class TweetCloud(object):
@@ -24,7 +25,7 @@ class TweetCloud(object):
         return u'\u0600' <= s <= u'\u06FF'
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
-        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
+        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
@@ -46,13 +47,13 @@ class TweetCloud(object):
         self.all_tweets_count = len(all_tweets)
         all_words = []
         for item in all_tweets:
+            # cleaned_text = FetchText.generaet(item)
             tw_text = item.text.split()
             for w in tw_text:
                 if self.is_perisan(w):
                     words = ''
                     words += ' ' + w
                     all_words.append(words)
-
         text = ''.join(all_words)
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
         # Generate a word cloud image

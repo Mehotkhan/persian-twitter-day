@@ -16,6 +16,7 @@ class Analysis(Document):
     }
     tweet_id = fields.IntField()
     text = fields.StringField()
+    clean_text = fields.DictField()
     user_name = fields.StringField()
     user_id = fields.IntField()
     user_screen_name = fields.StringField()

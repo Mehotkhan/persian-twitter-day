@@ -8,50 +8,51 @@ from tweepy import StreamListener, Stream, OAuthHandler
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import *
 from django.utils import timezone
+from tw.text_cleaner import FetchText
 
 
-class FetchTweets(object):
-    @staticmethod
-    def fetch():
-        today = datetime.datetime.today().strftime('%Y-%m-%d')
-        # tweets = []
-        # tmpTweets = api.home_timeline()
-        # for tweet in tmpTweets:
-        #     if today < tweet.created_at < today:
-        #         tweets.append(tweet)
-        counter2 = 0
-        while True:
-            try:
-                for tweet in tweepy.Cursor(api.home_timeline,
-                                           since=today, until=today).items(999999999):  # changeable here
-                    try:
-                        print("{:2d} tweets saved".format(counter2))
-                        if tweet.created_at.strftime('%Y-%m-%d') == today:
-                            print(tweet.created_at.strftime('%Y-%m-%d'))
-
-                        if tweet.text:
-                            result = db.tweet.insert_one(tweet._json)
-                            # print(line['text'])
-                            # print('tweets of {} imported'.format(tweet.user.screen_name))
-                        counter2 += 1
-                        if counter2 == 250:
-                            for i in range(20 * 60, 0, -1):
-                                time.sleep(1)
-                                sys.stdout.write("\r")
-                                sys.stdout.write("{:2d} seconds remaining.".format(i))
-                                sys.stdout.flush()
-                            continue
-                    except:
-                        print('fuck ?')
-
-            except tweepy.TweepError:
-                print('TweepError')
-                for i in range(20 * 60, 0, -1):
-                    time.sleep(1)
-                    sys.stdout.write("\r")
-                    sys.stdout.write("{:2d} seconds remaining.".format(i))
-                    sys.stdout.flush()
-                continue
+# class FetchTweets(object):
+#     @staticmethod
+#     def fetch():
+#         today = datetime.datetime.today().strftime('%Y-%m-%d')
+#         # tweets = []
+#         # tmpTweets = api.home_timeline()
+#         # for tweet in tmpTweets:
+#         #     if today < tweet.created_at < today:
+#         #         tweets.append(tweet)
+#         counter2 = 0
+#         while True:
+#             try:
+#                 for tweet in tweepy.Cursor(api.home_timeline,
+#                                            since=today, until=today).items(999999999):  # changeable here
+#                     try:
+#                         print("{:2d} tweets saved".format(counter2))
+#                         if tweet.created_at.strftime('%Y-%m-%d') == today:
+#                             print(tweet.created_at.strftime('%Y-%m-%d'))
+#
+#                         if tweet.text:
+#                             result = db.tweet.insert_one(tweet._json)
+#                             # print(line['text'])
+#                             # print('tweets of {} imported'.format(tweet.user.screen_name))
+#                         counter2 += 1
+#                         if counter2 == 250:
+#                             for i in range(20 * 60, 0, -1):
+#                                 time.sleep(1)
+#                                 sys.stdout.write("\r")
+#                                 sys.stdout.write("{:2d} seconds remaining.".format(i))
+#                                 sys.stdout.flush()
+#                             continue
+#                     except:
+#                         print('fuck ?')
+#
+#             except tweepy.TweepError:
+#                 print('TweepError')
+#                 for i in range(20 * 60, 0, -1):
+#                     time.sleep(1)
+#                     sys.stdout.write("\r")
+#                     sys.stdout.write("{:2d} seconds remaining.".format(i))
+#                     sys.stdout.flush()
+#                 continue
 
 
 class StdOutListener(StreamListener):
@@ -62,13 +63,10 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         data_json = json.loads(data)
         if data_json.get('text'):
-            # # import json
-            # with open('data.json', 'w') as outfile:
-            #     json.dump(data_json, outfile)
-            #     exit()
             tweet = Analysis()
             tweet.tweet_id = data_json['id']
             tweet.text = data_json['text']
+            tweet.clean_text = FetchText.generate(data_json['text'])
             tweet.user_name = data_json['user']['name']
             tweet.user_id = data_json['user']['id']
             tweet.user_screen_name = data_json['user']['screen_name']
