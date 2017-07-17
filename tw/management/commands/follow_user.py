@@ -14,11 +14,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         friends = api.friends_ids(api.me().id)
         friends_user = api.friends_ids(screen_name=options['user_id'])
+        print('hi')
         final_ids = [user for user in friends_user if user not in friends and user != api.me().id]
         print("You follow", len(friends), "users")
         print("friends_user", len(friends_user), "users")
         print("number of news follow = ", len(final_ids), "users")
-        # exit()
+        print()
+        exit()
         # while True:
         #     try:
         # user_follower = tweepy.Cursor(api.friends, screen_name=options['user_id']).items()
@@ -26,6 +28,7 @@ class Command(BaseCommand):
         # print(len(user_follower))
         # print('start following {} user'.format(len(list(user_follower))))
         for follower in final_ids:
+            print(follower)
             try:
                 api.create_friendship(follower)
                 print("Started following", follower)
