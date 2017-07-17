@@ -93,7 +93,7 @@ class TweetCloud(object):
             # width=800,
             # height=800,
             min_font_size=10,
-            max_font_size=50,
+            max_font_size=80,
             random_state=1,
             background_color="white",
             mask=twitter_mask
