@@ -26,7 +26,7 @@ class TweetCloud(object):
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
         self.from_time = abs(from_time)
-        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
+        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
