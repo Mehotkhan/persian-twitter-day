@@ -85,13 +85,13 @@ class StdOutListener(StreamListener):
             tweet.is_quote_status = data_json['is_quote_status']
             tweet.media_type = data_json['entities']['media'] if data_json['entities'].get('media') else ''
             tweet.retweet_count = data_json['retweeted_status']['retweet_count'] if data_json['retweeted_status'].get(
-                'retweet_count') else ''
+                'retweet_count') else 0
             tweet.favorite_count = data_json['retweeted_status']['favorite_count'] if data_json['retweeted_status'].get(
-                'favorite_count') else ''
+                'favorite_count') else 0
             tweet.user_mentions = data_json['entities']['user_mentions'] if data_json['entities'].get(
-                'user_mentions') else ''
+                'user_mentions') else []
             tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
-                'hashtags') else ''
+                'hashtags') else []
             tweet.save()
             print('data saved')
         else:
