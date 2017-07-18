@@ -32,3 +32,7 @@ class Analysis(Document):
     source = fields.StringField()
     media_type = fields.DynamicField()
     is_quote_status = fields.BooleanField()
+    retweet_count = fields.IntField()
+    favorite_count = fields.IntField()
+    user_mentions = fields.ListField()
+    hashtags = fields.ListField()

@@ -84,6 +84,14 @@ class StdOutListener(StreamListener):
             tweet.source = re.findall(r'<a .*>(.*)</a>', data_json['source'])[0]
             tweet.is_quote_status = data_json['is_quote_status']
             tweet.media_type = data_json['entities']['media'] if data_json['entities'].get('media') else ''
+            tweet.retweet_count = data_json['retweeted_status']['retweet_count'] if data_json['retweeted_status'].get(
+                'retweet_count') else ''
+            tweet.favorite_count = data_json['retweeted_status']['favorite_count'] if data_json['retweeted_status'].get(
+                'favorite_count') else ''
+            tweet.user_mentions = data_json['entities']['user_mentions'] if data_json['entities'].get(
+                'user_mentions') else ''
+            tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
+                'hashtags') else ''
             tweet.save()
             print('data saved')
         else:
@@ -101,8 +109,8 @@ class FetchStream(object):
     def fetch():
         print('hello')
         l = StdOutListener()
-        auth = OAuthHandler(consumer_key_data, consumer_secret_data)
-        auth.set_access_token(access_token_data, access_token_secret_data)
+        auth = OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_token_secret)
         # stream = api.St
         stream = Stream(auth, l).userstream("with=following")
 
