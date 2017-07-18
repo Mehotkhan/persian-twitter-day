@@ -67,7 +67,7 @@ class StdOutListener(StreamListener):
         data_json = json.loads(data)
         if data_json.get('text'):
             # check dumplicate tweet
-            if not Analysis.objects(Q(tweet_id__eq=data_json['id'])).exist():
+            if Analysis.objects(Q(tweet_id__eq=data_json['id'])).count() == 0:
                 tweet = Analysis()
                 tweet.tweet_id = data_json['id']
                 tweet.text = data_json['text']
