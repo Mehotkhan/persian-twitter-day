@@ -1,7 +1,7 @@
-# persian-twitter-day
-daily analysor  tweets of Persian language
+# Persian-twitter-day
+Daily analysor  tweets of Persian language
 
-twitter account :
+Twitter account :
 * https://twitter.com/persian_tw_day
 
 
@@ -30,4 +30,4 @@ twitter account :
 
 * text cloud from 1449 tweets on Fri,09 Tir 1396
 
-![Alt text](example/text-cloud.png?raw=true "ابر کلمات از 1449 تویت در تاریخ Fri, 09 Tir 1396 18:49:33")
+![Alt text](example/2017-07-18-02:07.png?raw=true "ابر کلمات از 1449 تویت در تاریخ Fri, 09 Tir 1396 18:49:33")
