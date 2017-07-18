@@ -10,12 +10,12 @@ Twitter account :
 * update local_settings with require data
 * (for iranian user )if you want run this on your local PC , uncomment  PROXY SETTINGS 
 
-# how to run :
+# How to run :
 * python3.6 manage.py runserver
 * celery -A tw_analysis worker -B 
 * celery -A tw_analysis beat -l info -S django
 
-# coomand :
+# Command :
 * generate tweet clouds (from -2 day ago,from -0 hours ,1000 words) : python manage.py words_cloud -2 0 1000
 * generate tweet clouds (from 0 day ago - today,from -2.5 hours ,1000 words) : python manage.py words_cloud 0 -2.5 1000
 *
@@ -27,7 +27,5 @@ Twitter account :
 * and more ;)
 
 # Demo:
-
-* text cloud from 1449 tweets on Fri,09 Tir 1396
 
 ![Alt text](example/2017-07-18-02:07.png?raw=true "ابر کلمات از 1449 تویت در تاریخ Fri, 09 Tir 1396 18:49:33")
