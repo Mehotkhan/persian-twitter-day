@@ -54,7 +54,7 @@ mongodb_username = ''
 mongodb_password = ''
 mongodb_host = ''
 mongodb_port = ''
-
+STATIC_ROOT = '/home/imanoel/Projects/twitter-analysis/static'
 REDIS = ''
 # PROXY SETTINGS
 # http proxy
