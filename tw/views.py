@@ -47,7 +47,7 @@ class TweetCloud(object):
             tw_text = item.clean_text
             for sentese in tw_text:
                 for item, key in sentese:
-                    if key in ['Ne', 'N', 'AJ', 'AJe']:
+                    if key in ['Ne', 'N', 'AJ', 'AJe'] and self.is_persian(item):
                         all_words.append(item)
 
         text = ' '.join(all_words)
@@ -84,3 +84,7 @@ class TweetCloud(object):
         )
         api.update_status(status=status_text, media_ids=media_ids)
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='text cloud image sends :**')
+
+    @staticmethod
+    def is_persian(words):
+        return u'\u0600' <= words <= u'\u06FF'
