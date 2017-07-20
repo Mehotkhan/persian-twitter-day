@@ -3,7 +3,7 @@ import jdatetime
 from mongoengine import Q
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import api, ADMIN_TW_ACCOUNT
-from persian_wordcloud.wordcloud import STOPWORDS, PersianWordCloud
+from persian_wordcloud.wordcloud import STOPWORDS, PersianWordCloud, add_stop_words
 from os import path
 from PIL import Image
 import numpy as np
@@ -19,10 +19,6 @@ class TweetCloud(object):
         self.from_date = None
         self.from_time = None
         self.to_date = None
-
-    # @staticmethod
-    # def is_perisan(s):
-    #     return u'\u0600' <= s <= u'\u06FF'
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
         self.from_time = abs(from_time)
@@ -48,50 +44,21 @@ class TweetCloud(object):
         self.all_tweets_count = len(all_tweets)
         all_words = []
         for item in all_tweets:
-            # cleaned_text = FetchText.generaet(item)
             tw_text = item.clean_text
             for sentese in tw_text:
                 for item, key in sentese:
                     if key in ['Ne', 'N', 'AJ', 'AJe']:
                         all_words.append(item)
-                        # for w in tw_text:
-                        #     if self.is_perisan(w):
-                        #         words = ''
-                        #         words += ' ' + w
-                        #         all_words.append(words)
+
         text = ' '.join(all_words)
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
         # Generate a word cloud image
-        STOPWORDS.add('می')
-        STOPWORDS.add('ای')
-        STOPWORDS.add('یه')
-        STOPWORDS.add('سر')
-        STOPWORDS.add('کن')
-        STOPWORDS.add('رو')
-        STOPWORDS.add('من')
-        STOPWORDS.add('تر')
-        STOPWORDS.add('اگه')
-        STOPWORDS.add('کنم')
-        STOPWORDS.add('کنه')
-        STOPWORDS.add('پر')
-        STOPWORDS.add('لا')
-        STOPWORDS.add('فی')
-        STOPWORDS.add('چی')
-        STOPWORDS.add('تو')
-        STOPWORDS.add('فک')
-        STOPWORDS.add('الان')
-        STOPWORDS.add('اون')
-        STOPWORDS.add('کردن')
-        STOPWORDS.add('نمی')
-        STOPWORDS.add('های')
-        stopwords = set(STOPWORDS)
+        stopwords = add_stop_words(['توییت', 'توییتر'])
         self.tweet_cloud = PersianWordCloud(
             only_persian=True,
             max_words=max_words,
             stopwords=stopwords,
             margin=0,
-            # width=800,
-            # height=800,
             min_font_size=10,
             max_font_size=80,
             random_state=1,
@@ -111,10 +78,6 @@ class TweetCloud(object):
         for file in self.file_names:
             res = api.media_upload(file)
             media_ids.append(res.media_id)
-        # from_date = self.from_date.replace(tzinfo=tz.tzlocal())
-        # to_date = self.to_date.replace(tzinfo=tz.tzlocal())
-        # j_from_date = jdatetime.datetime.fromgregorian(datetime=from_date)
-        # j_to_date = jdatetime.datetime.fromgregorian(datetime=to_date)
         status_text = "ابر کلمات {} ساعت گذشته از {} توییت".format(
             self.from_time,
             self.all_tweets_count,
