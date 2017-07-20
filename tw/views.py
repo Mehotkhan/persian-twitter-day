@@ -47,8 +47,12 @@ class TweetCloud(object):
             tw_text = item.clean_text
             for sentese in tw_text:
                 for item, key in sentese:
-                    if key in ['Ne', 'N', 'AJ', 'AJe'] and self.is_persian(item):
-                        all_words.append(item)
+                    if key in ['Ne', 'N', 'AJ', 'AJe']:
+                        word = ''
+                        for w in item:
+                            if u'\u0600' <= w <= u'\u06FF':
+                                word += w
+                        all_words.append(word)
 
         text = ' '.join(all_words)
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
@@ -85,6 +89,3 @@ class TweetCloud(object):
         api.update_status(status=status_text, media_ids=media_ids)
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='text cloud image sends :**')
 
-    @staticmethod
-    def is_persian(words):
-        return u'\u0600' <= words <= u'\u06FF'
