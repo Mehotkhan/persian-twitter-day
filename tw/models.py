@@ -98,7 +98,7 @@ class StdOutListener(StreamListener):
             tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                 'hashtags') else []
             tweet.save()
-            print('data saved')
+            # print('data saved')
 
         else:
             pass
