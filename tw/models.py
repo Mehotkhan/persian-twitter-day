@@ -111,7 +111,8 @@ class PersianListener(StreamListener):
                         input_queue.put(None)
                         return
                 # save if not retweeted and not mention
-                elif not data_json['entities'].get('user_mentions'):
+                elif not data_json['entities'].get('user_mentions') and Analysis.objects(
+                        tweet_id=data_json['id']).count() == 0:
                     tweet = Analysis()
                     tweet.tweet_id = data_json['id']
                     tweet.text = data_json['text']
@@ -146,7 +147,8 @@ class PersianListener(StreamListener):
                     input_queue.put(None)
                     return
                 # if tweet is mention
-                elif data_json['entities'].get('user_mentions'):
+                elif data_json['entities'].get('user_mentions') and Analysis.objects(
+                        tweet_id=data_json['id']).count() == 0:
                     tweet = Analysis()
                     tweet.tweet_id = data_json['id']
                     tweet.text = data_json['text']
@@ -180,6 +182,9 @@ class PersianListener(StreamListener):
                     print('tweet[\'mention\'] saved')
                     input_queue.put(None)
                     return
+                elif Analysis.objects(
+                        tweet_id=data_json['id']).count() > 0:
+                    print('dump Tweet')
                 else:
                     print('some data not in loop ?')
 
