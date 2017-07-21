@@ -103,9 +103,10 @@ class PersianListener(StreamListener):
                         input_queue.put(None)
                         return
                     else:
-                        tw_object.retweet_count = data_json['retweeted_status']['retweet_count']
-                        tw_object.favorite_count = data_json['retweeted_status']['favorite_count']
-                        tw_object.update()
+                        # tw_object.retweet_count = data_json['retweeted_status']['retweet_count']
+                        # tw_object.favorite_count = data_json['retweeted_status']['favorite_count']
+                        tw_object.update(retweet_count=data_json['retweeted_status']['retweet_count'],
+                                         favorite_count=data_json['retweeted_status']['favorite_count'])
                         print('retweet  updated')
                         input_queue.put(None)
                         return
