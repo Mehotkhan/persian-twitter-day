@@ -72,7 +72,7 @@ class StdOutListener(StreamListener):
             tweet = Analysis()
             tweet.tweet_id = data_json['id']
             tweet.text = data_json['text']
-            # tweet.clean_text = FetchText.generate(data_json['text'])
+            tweet.clean_text = FetchText.generate(data_json['text'])
             tweet.user_name = data_json['user']['name']
             tweet.user_id = data_json['user']['id']
             tweet.user_screen_name = data_json['user']['screen_name']
