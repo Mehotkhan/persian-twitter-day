@@ -185,6 +185,8 @@ class PersianListener(StreamListener):
                 elif Analysis.objects(
                         tweet_id=data_json['id']).count() > 0:
                     print('dump Tweet')
+                    input_queue.put(None)
+                    return
                 else:
                     print('some data not in loop ?')
 
