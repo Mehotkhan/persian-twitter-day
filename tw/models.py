@@ -66,7 +66,7 @@ class PersianListener(StreamListener):
                         tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                             'hashtags') else []
                         tweet.save()
-                        print('retweet saved')
+                        # print('retweet saved')
                         input_queue.put(None)
                         return
                     # if not exist
@@ -99,7 +99,7 @@ class PersianListener(StreamListener):
                         tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                             'hashtags') else []
                         tweet.save()
-                        print('retweet[\'mention\']  saved')
+                        # print('retweet[\'mention\']  saved')
                         input_queue.put(None)
                         return
                     else:
@@ -107,7 +107,7 @@ class PersianListener(StreamListener):
                         # tw_object.favorite_count = data_json['retweeted_status']['favorite_count']
                         tw_object.update(retweet_count=data_json['retweeted_status']['retweet_count'],
                                          favorite_count=data_json['retweeted_status']['favorite_count'])
-                        print('retweet  updated')
+                        # print('retweet  updated')
                         input_queue.put(None)
                         return
                 # save if not retweeted and not mention
@@ -143,7 +143,7 @@ class PersianListener(StreamListener):
                     tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                         'hashtags') else []
                     tweet.save()
-                    print('tweet saved')
+                    # print('tweet saved')
                     input_queue.put(None)
                     return
                 # if tweet is mention
@@ -179,7 +179,7 @@ class PersianListener(StreamListener):
                     tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                         'hashtags') else []
                     tweet.save()
-                    print('tweet[\'mention\'] saved')
+                    # print('tweet[\'mention\'] saved')
                     input_queue.put(None)
                     return
                 elif Analysis.objects(
