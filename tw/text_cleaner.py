@@ -29,4 +29,5 @@ class FetchText(object):
             # for item, key in taged:
             #     if key in ['Ne', 'N', 'AJ', 'AJe']:
             #         text_data.append(item)
-        return text_data
+        # return text_data
+        return []
