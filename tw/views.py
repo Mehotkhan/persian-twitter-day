@@ -39,6 +39,8 @@ class TweetCloud(object):
             Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
             &
             Q(create_date__gte=self.from_date.replace(tzinfo=tz.tzlocal()))
+            &
+            Q(user_mentions=[])
 
         ).all()
         self.all_tweets_count = len(all_tweets)
@@ -88,4 +90,3 @@ class TweetCloud(object):
         )
         api.update_status(status=status_text, media_ids=media_ids)
         api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='text cloud image sends :**')
-
