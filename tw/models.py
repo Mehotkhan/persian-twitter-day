@@ -10,64 +10,18 @@ from tw.text_cleaner import FetchText
 import queue
 
 
-# class FetchTweets(object):
-#     @staticmethod
-#     def fetch():
-#         today = datetime.datetime.today().strftime('%Y-%m-%d')
-#         # tweets = []
-#         # tmpTweets = api.home_timeline()
-#         # for tweet in tmpTweets:
-#         #     if today < tweet.created_at < today:
-#         #         tweets.append(tweet)
-#         counter2 = 0
-#         while True:
-#             try:
-#                 for tweet in tweepy.Cursor(api.home_timeline,
-#                                            since=today, until=today).items(999999999):  # changeable here
-#                     try:
-#                         print("{:2d} tweets saved".format(counter2))
-#                         if tweet.created_at.strftime('%Y-%m-%d') == today:
-#                             print(tweet.created_at.strftime('%Y-%m-%d'))
-#
-#                         if tweet.text:
-#                             result = db.tweet.insert_one(tweet._json)
-#                             # print(line['text'])
-#                             # print('tweets of {} imported'.format(tweet.user.screen_name))
-#                         counter2 += 1
-#                         if counter2 == 250:
-#                             for i in range(20 * 60, 0, -1):
-#                                 time.sleep(1)
-#                                 sys.stdout.write("\r")
-#                                 sys.stdout.write("{:2d} seconds remaining.".format(i))
-#                                 sys.stdout.flush()
-#                             continue
-#                     except:
-#                         print('fuck ?')
-#
-#             except tweepy.TweepError:
-#                 print('TweepError')
-#                 for i in range(20 * 60, 0, -1):
-#                     time.sleep(1)
-#                     sys.stdout.write("\r")
-#                     sys.stdout.write("{:2d} seconds remaining.".format(i))
-#                     sys.stdout.flush()
-#                 continue
-
-
-class StdOutListener(StreamListener):
-    """ A listener handles tweets that are received from the stream.
-    This is a basic listener that just prints received tweets to stdout.
-    """
+class PersianListener(StreamListener):
+    def __init__(self):
+        super(StreamListener, self).__init__()
+        self.input_queue = queue.Queue()
+        self.stop_event = threading.Event()
 
     def on_data(self, data):
         data_json = json.loads(data)
-        input_queue = queue.Queue()
-        stop_event = threading.Event()
-
-        print("Starting data collection thread...")
-        d = threading.Thread(target=self.save_tweet, args=(data_json, input_queue, stop_event))
+        # print("Starting data collection thread...")
+        d = threading.Thread(target=self.save_tweet, args=(data_json, self.input_queue, self.stop_event))
         d.start()
-        print("Done.")
+        # print("Done.")
 
         return True
 
@@ -111,8 +65,12 @@ class StdOutListener(StreamListener):
                         'hashtags') else []
                     tweet.save()
                     print('data saved')
+                    input_queue.put(None)
+                    return
                 else:
+                    input_queue.put(None)
                     print('Dump Data')
+                    return
 
             else:
                 pass
@@ -127,9 +85,9 @@ class FetchStream(object):
         print('hello')
         while True:
             try:
-                l = StdOutListener()
-                auth = OAuthHandler(consumer_key, consumer_secret)
-                auth.set_access_token(access_token, access_token_secret)
+                l = PersianListener()
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
                 # stream = api.St
                 stream = Stream(auth, l).userstream("with=following")
             except IncompleteRead:
