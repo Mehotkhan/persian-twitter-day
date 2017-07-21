@@ -117,12 +117,11 @@ class FetchStream(object):
         print('hello')
         while True:
             try:
-
                 l = StdOutListener()
                 auth = OAuthHandler(consumer_key_data, consumer_secret_data)
                 auth.set_access_token(access_token_data, access_token_secret_data)
                 # stream = api.St
-                stream = Stream(auth, l).userstream("with=following", async=True)
+                stream = Stream(auth, l).userstream("with=following", async=False)
             except IncompleteRead:
                 # Oh well, reconnect and keep trucking
                 continue
