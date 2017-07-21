@@ -3,6 +3,7 @@ import json
 import re
 import time
 import sys
+from http.client import IncompleteRead
 
 from mongoengine import Q
 
@@ -113,12 +114,21 @@ def on_error(self, status):
 class FetchStream(object):
     @staticmethod
     def fetch():
-        print('hello')
-        l = StdOutListener()
-        auth = OAuthHandler(consumer_key_data, consumer_secret_data)
-        auth.set_access_token(access_token_data, access_token_secret_data)
-        # stream = api.St
-        stream = Stream(auth, l).userstream("with=following", async=True)
+        while True:
+            try:
+                print('hello')
+                l = StdOutListener()
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
+                # stream = api.St
+                stream = Stream(auth, l).userstream("with=following", async=True)
+            except IncompleteRead:
+                # Oh well, reconnect and keep trucking
+                continue
+            except KeyboardInterrupt:
+                # Or however you want to exit this loop
+                stream.disconnect()
+                break
 
 
 class MessageBoot(object):
