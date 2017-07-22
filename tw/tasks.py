@@ -21,10 +21,11 @@ def auto_follow_back():
 @shared_task
 def keep_alive():
     now_time = datetime.datetime.now().strftime('%d-%b-%Y | %H:%M:%S')
-    pool = Pool(processes=1)
-    pool.apply_async(MessageBoot.send, args=('i\'m here \n {}'.format(now_time),))
-    pool.close()
-    pool.join()
+    # pool = Pool(processes=1)
+    print('message')
+    MessageBoot.send('i\'m here \n {}'.format(now_time))
+    # pool.close()
+    # pool.join()
 
 
 @shared_task
