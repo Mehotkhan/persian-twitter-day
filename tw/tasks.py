@@ -23,6 +23,7 @@ def keep_alive():
     input_queue = queue.Queue()
     stop_event = threading.Event()
     now_time = datetime.datetime.now().strftime('%d-%b-%Y | %H:%M:%S')
+    print(now_time)
     d = threading.Thread(target=MessageBoot.send, args=('i\'m here \n {}'.format(now_time), input_queue, stop_event))
     d.start()
     # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='i\'m here \n {}'.format(now_time))
