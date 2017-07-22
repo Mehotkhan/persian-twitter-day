@@ -91,13 +91,10 @@ class TweetCloud(object):
         api.update_status(status=status_text, media_ids=media_ids)
 
     @staticmethod
-    def send_text_cloud(f_date, f_time, max_words, input_queue, stop_event):
-        while not stop_event.is_set():
-            command_cloud = TweetCloud()
-            MessageBoot.send('im going to generate Text CLOUD', input_queue, stop_event)
-            command_cloud.generate(from_date=f_date, from_time=f_time,
-                                   max_words=max_words)
-            command_cloud.send()
-            MessageBoot.send('Text Cloud send', input_queue, stop_event)
-            input_queue.put(None)
-            return
+    def send_text_cloud(f_date, f_time, max_words):
+        command_cloud = TweetCloud()
+        MessageBoot.send('im going to generate Text CLOUD')
+        command_cloud.generate(from_date=f_date, from_time=f_time,
+                               max_words=max_words)
+        command_cloud.send()
+        MessageBoot.send('Text Cloud send')
