@@ -1,10 +1,6 @@
-import parser
-import queue
-import threading
-
+from multiprocessing import Pool
 from django.core.management.base import BaseCommand
 from tw.views import TweetCloud
-from tw_analysis.settings.local_settings import api
 
 
 class Command(BaseCommand):
@@ -27,12 +23,7 @@ class Command(BaseCommand):
         else:
             from_time = options['from_time']
 
-        input_queue = queue.Queue()
-        stop_event = threading.Event()
-        d = threading.Thread(target=TweetCloud.send_text_cloud,
-                             args=(from_date, from_time, options['max_words'], input_queue, stop_event))
-        d.start()
-        # command_cloud = TweetCloud()
-        # command_cloud.generate(from_date=from_date, from_time=from_time,
-        #                        max_words=options['max_words'])
-        # command_cloud.send()
+        pool = Pool(processes=4)
+        pool.apply_async(TweetCloud.send_text_cloud, args=(from_date, from_time, options['max_words']))
+        pool.close()
+        pool.join()
