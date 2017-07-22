@@ -1,4 +1,3 @@
-from multiprocessing import Pool
 from django.core.management.base import BaseCommand
 from tw.views import TweetCloud
 
@@ -23,7 +22,4 @@ class Command(BaseCommand):
         else:
             from_time = options['from_time']
 
-        pool = Pool(processes=4)
-        pool.apply_async(TweetCloud.send_text_cloud, args=(from_date, from_time, options['max_words']))
-        pool.close()
-        pool.join()
+        TweetCloud.send_text_cloud(from_date, from_time, options['max_words'])
