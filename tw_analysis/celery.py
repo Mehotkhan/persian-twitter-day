@@ -1,12 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 import os
-
 import time
 from celery import Celery, shared_task
 from celery.schedules import crontab
-from celery.signals import celeryd_init, worker_ready
+from celery.signals import celeryd_init, worker_ready, worker_init
 
 # set the default Django settings module for the 'celery' program.
+from celery.utils.dispatch import signal
+
 from tw.models import FetchStream, MessageBoot
 from tw_analysis.settings.local_settings import REDIS
 
@@ -32,17 +33,6 @@ def debug_task(self):
 app.conf.result_backend = REDIS
 
 
-# @app.task(bind=True)
-# def at_start(sender, **k):
-#     with sender.app.connection() as conn:
-#         # message = MessageBoot()
-#         # message.send()
-#         print('hello')
-#         time.sleep(15)
-#         stream = FetchStream
-#         stream.fetch()
-
-
 @shared_task
 def start_up():
     # message = MessageBoot()
@@ -51,4 +41,18 @@ def start_up():
     stream.fetch()
 
 
-start_up.apply_async()
+#
+# app.conf.beat_schedule = {
+#
+#     "keep_alive": {
+#         'task': 'tw.tasks.keep_alive',
+#         'schedule': 10.0,
+#     },
+#
+# }
+
+@worker_ready.connect
+def at_start(sender, **k):
+    with sender.app.connection() as conn:
+        start_up.apply_async()
+        print('hello')
