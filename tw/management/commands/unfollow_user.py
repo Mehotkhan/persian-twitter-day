@@ -9,29 +9,26 @@ class Command(BaseCommand):
     help = 'follow follower of user'
 
     def add_arguments(self, parser):
-        parser.add_argument('user_id', type=str)
+        parser.add_argument('number', type=int)
 
     def handle(self, *args, **options):
-        friends = api.friends_ids(api.me().id)
-        friends_user = api.friends_ids(screen_name=options['user_id'])
-        final_ids = [user for user in friends_user if user not in friends]
-        if api.me().id in final_ids:
-            final_ids.remove(api.me().id)
+        friend_objects = [friend for friend in tweepy.Cursor(api.friends).items()]
+        # create dictionaries based on id's for easy lookup
+        friends = dict([(friend.id, friend) for friend in friend_objects])
         print("You follow", len(friends), "users")
-        print("friends_user", len(friends_user), "users")
-        print("number of news follow = ", len(final_ids), "users")
-        for follower in final_ids:
-            try:
-                api.create_friendship(follower)
-                print("Started following", follower)
+        for friend in friends:
+            for i in range(0, options['number']):
+                try:
+                    friend.unfollow()
+                    print("unfollow", friend.screen_name)
 
-            except tweepy.RateLimitError:
-                for i in range(2 * 60, 0, -1):
-                    time.sleep(1)
-                    sys.stdout.write("\r")
-                    sys.stdout.write("{:2d} seconds remaining.".format(i))
-                    sys.stdout.flush()
-                continue
-            except tweepy.TweepError:
-                print('You are unable to follow more people at this time.')
-                exit()
+                except tweepy.RateLimitError:
+                    for i in range(2 * 60, 0, -1):
+                        time.sleep(1)
+                        sys.stdout.write("\r")
+                        sys.stdout.write("{:2d} seconds remaining.".format(i))
+                        sys.stdout.flush()
+                    continue
+                except tweepy.TweepError:
+                    print('You are unable to follow more people at this time.')
+                    exit()

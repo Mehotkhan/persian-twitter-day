@@ -221,5 +221,8 @@ class FetchStream(object):
 
 class MessageBoot(object):
     @staticmethod
-    def send():
-        api.send_direct_message(user='last_elvish', text='hi , im load ;)')
+    def send(message, input_queue, stop_event):
+        while not stop_event.is_set():
+            api.send_direct_message(user=ADMIN_TW_ACCOUNT, text=message)
+            input_queue.put(None)
+            return

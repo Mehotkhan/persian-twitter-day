@@ -1,4 +1,7 @@
 import parser
+import queue
+import threading
+
 from django.core.management.base import BaseCommand
 from tw.views import TweetCloud
 from tw_analysis.settings.local_settings import api
@@ -23,7 +26,13 @@ class Command(BaseCommand):
             from_time = None
         else:
             from_time = options['from_time']
-        command_cloud = TweetCloud()
-        command_cloud.generate(from_date=from_date, from_time=from_time,
-                               max_words=options['max_words'])
-        command_cloud.send()
+
+        input_queue = queue.Queue()
+        stop_event = threading.Event()
+        d = threading.Thread(target=TweetCloud.send_text_cloud,
+                             args=(from_date, from_time, options['max_words'], input_queue, stop_event))
+        d.start()
+        # command_cloud = TweetCloud()
+        # command_cloud.generate(from_date=from_date, from_time=from_time,
+        #                        max_words=options['max_words'])
+        # command_cloud.send()

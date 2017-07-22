@@ -1,6 +1,8 @@
 import datetime
 import jdatetime
 from mongoengine import Q
+
+from tw.models import MessageBoot
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import api, ADMIN_TW_ACCOUNT
 from persian_wordcloud.wordcloud import STOPWORDS, PersianWordCloud, add_stop_words
@@ -22,7 +24,6 @@ class TweetCloud(object):
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", max_words=1000):
         self.from_time = abs(from_time)
-        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to generate text CLOUD :*')
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
@@ -73,7 +74,6 @@ class TweetCloud(object):
         ).generate(text)
 
     def send(self):
-        # api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='hey , i\'m going to send text CLOUD :*')
         filename = datetime.datetime.today().strftime('%Y-%m-%d-%H:%m')
         image = (path.join(self.d, 'tmp/' + filename + '.png'))
         img = self.tweet_cloud.to_image()
@@ -89,4 +89,15 @@ class TweetCloud(object):
             self.all_tweets_count,
         )
         api.update_status(status=status_text, media_ids=media_ids)
-        api.send_direct_message(user=ADMIN_TW_ACCOUNT, text='text cloud image sends :**')
+
+    @staticmethod
+    def send_text_cloud(f_date, f_time, max_words, input_queue, stop_event):
+        while not stop_event.is_set():
+            command_cloud = TweetCloud()
+            MessageBoot.send('im going to generate Text CLOUD', input_queue, stop_event)
+            command_cloud.generate(from_date=f_date, from_time=f_time,
+                                   max_words=max_words)
+            command_cloud.send()
+            MessageBoot.send('Text Cloud send', input_queue, stop_event)
+            input_queue.put(None)
+            return
