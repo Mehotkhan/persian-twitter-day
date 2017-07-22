@@ -187,8 +187,8 @@ class FetchStream(object):
         while True:
             try:
                 l = PersianListener()
-                auth = OAuthHandler(consumer_key, consumer_secret)
-                auth.set_access_token(access_token, access_token_secret)
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
                 # stream = api.St
                 stream = Stream(auth, l).userstream("with=following")
             except IncompleteRead:
