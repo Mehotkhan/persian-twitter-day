@@ -16,13 +16,14 @@ from tw.text_cleaner import FetchText
 class PersianListener(StreamListener):
     def __init__(self):
         super(StreamListener, self).__init__()
+        self.pool = Pool(processes=4)
 
     def on_data(self, data):
         data_json = json.loads(data)
-        pool = Pool(processes=4)
-        pool.apply_async(self.save_tweet, args=(data_json,))
-        pool.close()
-        pool.join()
+        # pool = Pool(processes=4)
+        self.pool.apply_async(self.save_tweet, args=(data_json,))
+        self.pool.close()
+        self.pool.join()
         return True
 
     def on_error(self, status):
