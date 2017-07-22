@@ -41,12 +41,12 @@ def start_up():
     stream.fetch()
 
 
-#
+
 # app.conf.beat_schedule = {
 #
 #     "keep_alive": {
 #         'task': 'tw.tasks.keep_alive',
-#         'schedule': 10.0,
+#         'schedule': 1.0,
 #     },
 #
 # }

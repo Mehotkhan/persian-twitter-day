@@ -17,7 +17,7 @@ class PersianListener(StreamListener):
     def on_data(self, data):
         data_json = json.loads(data)
         pool = Pool(processes=4)
-        pool.apply_async(self.save_tweet, args=(data_json,))
+        pool.apply(self.save_tweet, args=(data_json,))
         pool.close()
         pool.join()
         return True
