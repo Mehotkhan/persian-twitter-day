@@ -95,7 +95,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 STATIC_URL = '/static/'
 CELERY_BROKER_URL = REDIS
 CELERY_RESULT_BACKEND = REDIS
@@ -109,7 +108,7 @@ REQUEST_CACHE_TIME_TO_LIVE = 600
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://localhost:6379/api',
+        "LOCATION": REDIS,
         'OPTIONS': {
             'DB': 1,
             # 'PASSWORD': 'yadayada',

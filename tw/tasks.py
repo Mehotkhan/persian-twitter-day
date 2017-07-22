@@ -5,8 +5,8 @@ from tw.models import MessageBoot
 from tw.views import TweetCloud
 from tw_analysis.settings.local_settings import api
 from tw_analysis.settings.local_settings import ADMIN_TW_ACCOUNT
-from multiprocessing import Pool
-
+# from multiprocessing import Pool
+from billiard.pool import Pool
 
 @shared_task
 def auto_follow_back():
@@ -15,14 +15,10 @@ def auto_follow_back():
         follower.follow()
 
 
-@shared_task
+@shared_task()
 def keep_alive():
     now_time = datetime.datetime.now().strftime('%d-%b-%Y | %H:%M:%S')
-    # pool = Pool(processes=1)
-    print('message')
     MessageBoot.send('i\'m here \n {}'.format(now_time))
-    # pool.close()
-    # pool.join()
 
 
 @shared_task

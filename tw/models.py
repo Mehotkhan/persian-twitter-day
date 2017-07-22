@@ -3,11 +3,14 @@ import json
 import re
 import threading
 from http.client import IncompleteRead
+from billiard.pool import Pool
 from tweepy import StreamListener, Stream, OAuthHandler
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import *
 from tw.text_cleaner import FetchText
-from multiprocessing import Pool
+
+
+# from multiprocessing import Pool
 
 
 class PersianListener(StreamListener):
@@ -16,8 +19,8 @@ class PersianListener(StreamListener):
 
     def on_data(self, data):
         data_json = json.loads(data)
-        pool = Pool(processes=4)
-        pool.apply(self.save_tweet, args=(data_json,))
+        pool = Pool(processes=1)
+        pool.apply_async(self.save_tweet, args=(data_json,))
         pool.close()
         pool.join()
         return True
@@ -187,10 +190,10 @@ class FetchStream(object):
         while True:
             try:
                 l = PersianListener()
-                auth = OAuthHandler(consumer_key, consumer_secret)
-                auth.set_access_token(access_token, access_token_secret)
-                # stream = api.St
-                stream = Stream(auth, l).userstream("with=following")
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
+                stream = Stream(auth, l)
+                stream.userstream("with=following")
             except IncompleteRead:
                 # Oh well, reconnect and keep trucking
                 continue
