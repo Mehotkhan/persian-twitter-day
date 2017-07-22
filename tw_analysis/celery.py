@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 import os
-from celery import Celery
+
+import time
+from celery import Celery, shared_task
 from celery.schedules import crontab
 from celery.signals import celeryd_init, worker_ready
 
@@ -30,26 +32,23 @@ def debug_task(self):
 app.conf.result_backend = REDIS
 
 
-# app.conf.beat_schedule = {
-#     'tweet_cloud': {
-#         'task': 'tw.tasks.tweet_cloud',
-#         'schedule': crontab(minute=0, hour='*/6')
-#     },
-#     "keep_alive": {
-#         'task': 'tw.tasks.keep_alive',
-#         'schedule': 300.0,
-#     },
-#     'auto_follow_back': {
-#         'task': 'tw.tasks.auto_follow_back',
-#         'schedule': 1800.0,
-#     },
-# }
+# @app.task(bind=True)
+# def at_start(sender, **k):
+#     with sender.app.connection() as conn:
+#         # message = MessageBoot()
+#         # message.send()
+#         print('hello')
+#         time.sleep(15)
+#         stream = FetchStream
+#         stream.fetch()
 
 
-@worker_ready.connect
-def at_start(sender, **k):
-    with sender.app.connection() as conn:
-        # message = MessageBoot()
-        # message.send()
-        stream = FetchStream
-        stream.fetch()
+@shared_task
+def start_up():
+    # message = MessageBoot()
+    # message.send()
+    stream = FetchStream
+    stream.fetch()
+
+
+start_up.apply_async()

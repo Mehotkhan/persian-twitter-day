@@ -1,9 +1,6 @@
 import datetime
-import threading
-
 import tweepy
 from celery import shared_task
-
 from tw.models import MessageBoot
 from tw.views import TweetCloud
 from tw_analysis.settings.local_settings import api
