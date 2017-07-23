@@ -190,19 +190,19 @@ class FetchStream(object):
     def fetch():
         print('hello')
         # while True:
-        # try:
-        l = PersianListener()
-        auth = OAuthHandler(consumer_key_data, consumer_secret_data)
-        auth.set_access_token(access_token_data, access_token_secret_data)
-        stream = Stream(auth, l)
-        stream.userstream("with=following")
-        # except IncompleteRead:
-        #     # Oh well, reconnect and keep trucking
-        #     continue
-        # except KeyboardInterrupt:
-        #     # Or however you want to exit this loop
-        #     stream.disconnect()
-        #     break
+        try:
+            l = PersianListener()
+            auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+            auth.set_access_token(access_token_data, access_token_secret_data)
+            stream = Stream(auth, l)
+            stream.userstream("with=following")
+        except IncompleteRead:
+            # Oh well, reconnect and keep trucking
+            pass
+            # except KeyboardInterrupt:
+            #     # Or however you want to exit this loop
+            #     stream.disconnect()
+            #     break
 
 
 class MessageBoot(object):
