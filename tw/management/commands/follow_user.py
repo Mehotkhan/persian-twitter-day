@@ -2,7 +2,7 @@ import time
 import sys
 from django.core.management.base import BaseCommand
 import tweepy
-from tw_analysis.settings.local_settings import api
+from tw_analysis.settings.local_settings import api_data as api
 
 
 class Command(BaseCommand):
