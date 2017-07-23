@@ -21,6 +21,7 @@ class Command(BaseCommand):
         print("friends_user", len(friends_user), "users")
         print("number of news follow = ", len(final_ids), "users")
         for follower in final_ids:
+            error_count = 0
             try:
                 api.create_friendship(follower)
                 print("Started following", follower)
@@ -33,5 +34,9 @@ class Command(BaseCommand):
                     sys.stdout.flush()
                 continue
             except tweepy.TweepError:
+                error_count += 1
                 print('You are unable to follow more people at this time.')
-                exit()
+                if error_count >= 10:
+                    exit()
+                else:
+                    continue
