@@ -104,7 +104,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 REQUEST_CACHE_TIME_TO_LIVE = 600
-
+CELERY_IMPORTS = ['tw.tasks']
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
