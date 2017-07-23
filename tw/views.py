@@ -172,10 +172,10 @@ class TweetChart(object):
     @staticmethod
     def send_tweet_chart(f_date, f_time):
         command_cloud = TweetChart()
-        # MessageBoot.send('im going to generate tweet chart')
+        MessageBoot.send('im going to generate tweet chart')
         command_cloud.generate(from_date=f_date, from_time=f_time)
-        # command_cloud.send()
-        # MessageBoot.send('tweet chart Cloud send')
+        command_cloud.send()
+        MessageBoot.send('tweet chart Cloud send')
 
 
 class TweetCloud(object):
