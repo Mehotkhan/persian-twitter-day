@@ -46,16 +46,13 @@ def tweet_cloud(from_date, from_time, max_words=1000):
 
 @shared_task
 def tweet_chart(from_date, from_time):
-    f_date = None
-    f_time = None
     if from_date == 0:
-        f_date = None
+        from_date = None
     else:
-        f_date = float(from_date)
-
+        from_date = from_date
     if from_time == 0:
-        f_time = None
+        from_time = None
     else:
-        f_time = float(from_time)
+        from_time = from_time
 
-    TweetChart.send_tweet_chart(f_date, f_time)
+    TweetChart.send_tweet_chart(from_date, from_time)
