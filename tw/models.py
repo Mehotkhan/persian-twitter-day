@@ -34,6 +34,7 @@ class PersianListener(StreamListener):
     def save_tweet(data_json):
         if data_json.get('text'):
             # check if tweet is retweet:
+
             if data_json.get('retweeted_status'):
                 retweeted_id = data_json['retweeted_status']['id']
                 tw_object = Analysis.objects(tweet_id=retweeted_id)
@@ -105,8 +106,10 @@ class PersianListener(StreamListener):
                     # print('retweet  updated')
                     return
             # save if not retweeted and not mention
-            elif not data_json['entities'].get('user_mentions') and Analysis.objects(
-                    tweet_id=data_json['id']).count() == 0:
+
+            tweet_count = Analysis.objects(tweet_id=data_json['id']).count()
+            if not data_json['entities'].get('user_mentions') and tweet_count == 0 and not data_json.get(
+                    'retweeted_status'):
                 tweet = Analysis()
                 tweet.tweet_id = data_json['id']
                 tweet.text = data_json['text']
@@ -140,8 +143,8 @@ class PersianListener(StreamListener):
                 # print('tweet saved')
                 return
             # if tweet is mention
-            elif data_json['entities'].get('user_mentions') and Analysis.objects(
-                    tweet_id=data_json['id']).count() == 0:
+            elif data_json['entities'].get('user_mentions') and tweet_count == 0 and not data_json.get(
+                    'retweeted_status'):
                 tweet = Analysis()
                 tweet.tweet_id = data_json['id']
                 tweet.text = data_json['text']
@@ -174,9 +177,9 @@ class PersianListener(StreamListener):
                 tweet.save()
                 # print('tweet[\'mention\'] saved')
                 return
-            elif Analysis.objects(
-                    tweet_id=data_json['id']).count() > 0:
-                print('dump Tweet')
+            elif tweet_count > 0 and not data_json.get(
+                    'retweeted_status'):
+                print('dump Tweet {}'.format(tweet_count))
                 return
             else:
                 print('some data not in loop ?')
