@@ -33,14 +33,14 @@ def start_up():
     FetchStream.fetch()
 
 
-app.conf.beat_schedule = {
-
-    "keep_alive": {
-        'task': 'tw.tasks.keep_alive',
-        'schedule': 15.0,
-    },
-
-}
+# app.conf.beat_schedule = {
+#
+#     "keep_alive": {
+#         'task': 'tw.tasks.keep_alive',
+#         'schedule': 15.0,
+#     },
+#
+# }
 
 
 @worker_ready.connect
