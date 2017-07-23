@@ -4,14 +4,14 @@ django_redis
 mongoengine
 psycopg2
 django-jet
-acora
 django-redis-cache
 tweepy
 tqdm
-arabic_reshaper
-python-bidi
 jdatetime
 persian_wordcloud
 django-celery-beat==1.0.1
 hazm
 gunicorn
+pygal
+cairosvg
+django_rq

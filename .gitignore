@@ -13,3 +13,4 @@ __pycache__/
 /tw/tmp/
 /tw/resources/postagger.model
 /static/
+/tw/management/commands/test2.py
