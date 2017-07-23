@@ -20,7 +20,7 @@ class PersianListener(StreamListener):
 
     def on_data(self, data):
         data_json = json.loads(data)
-        pool = Pool()
+        pool = Pool(processes=4)
         pool.apply_async(self.save_tweet, args=(data_json,))
         pool.close()
         pool.join()
@@ -64,7 +64,7 @@ class PersianListener(StreamListener):
                     tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                         'hashtags') else []
                     tweet.save()
-                    # print('retweet saved')
+                    print('retweet saved')
                     return
                 # if not exist
                 elif data_json['retweeted_status']['entities'].get('user_mentions'):
@@ -96,12 +96,12 @@ class PersianListener(StreamListener):
                     tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                         'hashtags') else []
                     tweet.save()
-                    # print('retweet[\'mention\']  saved')
+                    print('retweet[\'mention\']  saved')
                     return
                 else:
                     tw_object.update(retweet_count=data_json['retweeted_status']['retweet_count'],
                                      favorite_count=data_json['retweeted_status']['favorite_count'])
-                    # print('retweet  updated')
+                    print('retweet  updated')
                     return
             # save if not retweeted and not mention
             elif not data_json['entities'].get('user_mentions') and Analysis.objects(
@@ -136,7 +136,7 @@ class PersianListener(StreamListener):
                 tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                     'hashtags') else []
                 tweet.save()
-                # print('tweet saved')
+                print('tweet saved')
                 return
             # if tweet is mention
             elif data_json['entities'].get('user_mentions') and Analysis.objects(
@@ -171,11 +171,11 @@ class PersianListener(StreamListener):
                 tweet.hashtags = data_json['entities']['hashtags'] if data_json['entities'].get(
                     'hashtags') else []
                 tweet.save()
-                # print('tweet[\'mention\'] saved')
+                print('tweet[\'mention\'] saved')
                 return
             elif Analysis.objects(
                     tweet_id=data_json['id']).count() > 0:
-                # print('dump Tweet')
+                print('dump Tweet')
                 return
             else:
                 print('some data not in loop ?')
