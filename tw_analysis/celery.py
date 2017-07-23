@@ -26,7 +26,7 @@ def debug_task(self):
 app.conf.result_backend = REDIS
 
 
-@shared_task()
+@task()
 def start_up():
     FetchStream.fetch()
 
