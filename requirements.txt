@@ -14,4 +14,3 @@ hazm
 gunicorn
 pygal
 cairosvg
-django_rq
