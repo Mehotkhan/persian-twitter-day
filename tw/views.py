@@ -1,4 +1,6 @@
 import datetime
+import locale
+
 import jdatetime
 import pygal
 from mongoengine import Q
@@ -24,8 +26,10 @@ class TweetChart(object):
         self.date_list = []
 
     def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now"):
-
-        self.from_time = abs(from_time)
+        if from_time:
+            self.from_time = abs(from_time)
+        if from_date:
+            self.from_date = abs(from_date)
         if from_date and to_date:
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
@@ -36,9 +40,9 @@ class TweetChart(object):
                 self.date_list = [(self.to_date + datetime.timedelta(x)) for x in range(from_date, 1)]
         if from_time and to_time:
             if isinstance(from_time, int) and to_time == "Now":
-                self.to_date = datetime.datetime.now()
-                self.date_list = [(self.to_date + datetime.timedelta(hours=x)) for x in range(from_time, 1)]
-
+                self.to_date = datetime.datetime.now().replace(tzinfo=tz.tzlocal())
+                self.date_list = [(self.to_date + datetime.timedelta(hours=x)).replace(tzinfo=tz.tzlocal()) for x in
+                                  range(from_time, 1)]
         tw_count = []
         quotes_count = []
         retweet_count = []
@@ -49,9 +53,9 @@ class TweetChart(object):
             if index == len(self.date_list) - 1:
                 break
             tweets = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
                 &
                 Q(retweet_count=0)
 
@@ -59,9 +63,9 @@ class TweetChart(object):
             tw_count.append(tweets.count())
             # count quotes
             quotes = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
                 &
                 Q(is_quote_status=True)
 
@@ -69,9 +73,9 @@ class TweetChart(object):
             quotes_count.append(quotes.count())
             # count retweet
             retweet = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
                 &
                 Q(retweet_count__gt=0)
 
@@ -79,9 +83,9 @@ class TweetChart(object):
             retweet_count.append(retweet.count())
             # user mention #
             all_mention = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
                 &
                 Q(user_mentions__ne=[])
 
@@ -89,9 +93,9 @@ class TweetChart(object):
             all_mention_count.append(all_mention.count())
             # Media
             all_media = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
                 &
                 Q(media_type__ne='')
 
@@ -99,17 +103,19 @@ class TweetChart(object):
             all_media_count.append(all_media.count())
             # all tweet
             all_tweet = Analysis.objects(
-                Q(create_date__gte=self.date_list[index].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__gte=self.date_list[index])
                 &
-                Q(create_date__lt=self.date_list[index + 1].replace(tzinfo=tz.tzlocal()))
+                Q(create_date__lt=self.date_list[index + 1])
 
             ).all()
             all_tweet_count.append(all_tweet.count())
 
         date_chart = pygal.Bar(margin=100, height=1000, width=1000, x_label_rotation=90)
         date_chart.x_labels = map(
-            lambda d: jdatetime.datetime.fromgregorian(datetime=d.replace(tzinfo=tz.tzlocal())).strftime(
-                '%m/%d - %H:%m'),
+            lambda d: jdatetime.datetime.fromgregorian(datetime=d).strftime(
+                '%m/%d - %H:%m ') if isinstance(d, datetime.datetime) else jdatetime.date.fromgregorian(
+                date=d).strftime(
+                '%a %m/%d'),
             self.date_list[:-1])
         date_chart.title = 'Count  of ALL'
         date_chart.add("all_tweet_count", all_tweet_count)
@@ -150,19 +156,26 @@ class TweetChart(object):
         for file in self.file_names:
             res = api.media_upload(file)
             media_ids.append(res.media_id)
-        status_text = "چارت توییت های {} ساعت گذشته از {} توییت ".format(
-            self.from_time,
-            self.all_tweets_count,
-        )
+        status_text = ''
+        if self.from_time:
+            status_text = "چارت توییت های {} ساعت گذشته از {} توییت ".format(
+                self.from_time,
+                self.all_tweets_count,
+            )
+        if self.from_date:
+            status_text = "چارت توییت های {} روز گذشته از {} توییت ".format(
+                self.from_date,
+                self.all_tweets_count,
+            )
         api.update_status(status=status_text, media_ids=media_ids)
 
     @staticmethod
     def send_tweet_chart(f_date, f_time):
         command_cloud = TweetChart()
-        MessageBoot.send('im going to generate tweet chart')
+        # MessageBoot.send('im going to generate tweet chart')
         command_cloud.generate(from_date=f_date, from_time=f_time)
-        command_cloud.send()
-        MessageBoot.send('tweet chart Cloud send')
+        # command_cloud.send()
+        # MessageBoot.send('tweet chart Cloud send')
 
 
 class TweetCloud(object):
