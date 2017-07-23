@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery, shared_task, task
+from celery.signals import worker_ready
+
 from tw.models import FetchStream, MessageBoot
 from tw_analysis.settings.local_settings import REDIS
 
@@ -26,17 +28,24 @@ def debug_task(self):
 app.conf.result_backend = REDIS
 
 
-@task()
+@shared_task()
 def start_up():
     FetchStream.fetch()
 
-#
-# app.conf.beat_schedule = {
-#
-#     "keep_alive": {
-#         'task': 'tw.tasks.keep_alive',
-#         'schedule': 15.0,
-#     },
 
-# }
-start_up.delay()
+app.conf.beat_schedule = {
+
+    "keep_alive": {
+        'task': 'tw.tasks.keep_alive',
+        'schedule': 15.0,
+    },
+
+}
+
+
+@worker_ready.connect
+def at_start(sender, **k):
+    with sender.app.connection() as conn:
+        start_up.apply_async()
+
+# start_up.delay()

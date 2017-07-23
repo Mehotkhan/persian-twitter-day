@@ -16,14 +16,14 @@ from tw.text_cleaner import FetchText
 class PersianListener(StreamListener):
     def __init__(self):
         super(StreamListener, self).__init__()
-        self.pool = Pool(processes=4)
+        # self.pool = Pool(processes=4)
 
     def on_data(self, data):
         data_json = json.loads(data)
-        # pool = Pool(processes=4)
-        self.pool.apply_async(self.save_tweet, args=(data_json,))
-        self.pool.close()
-        self.pool.join()
+        pool = Pool(processes=4)
+        pool.apply_async(self.save_tweet, args=(data_json,))
+        pool.close()
+        pool.join()
         return True
 
     def on_error(self, status):
@@ -191,8 +191,8 @@ class FetchStream(object):
         while True:
             try:
                 l = PersianListener()
-                auth = OAuthHandler(consumer_key, consumer_secret)
-                auth.set_access_token(access_token, access_token_secret)
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
                 stream = Stream(auth, l)
                 stream.userstream("with=following")
             except IncompleteRead:
