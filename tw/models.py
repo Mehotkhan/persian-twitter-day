@@ -179,7 +179,8 @@ class PersianListener(StreamListener):
                 return
             elif tweet_count > 0 and not data_json.get(
                     'retweeted_status'):
-                print('dump Tweet {}'.format(tweet_count))
+                print('dump Tweet -c{}-r{}-f{}'.format(tweet_count, data_json['retweet_count'],
+                                                       data_json['favorite_count']))
                 return
             else:
                 print('some data not in loop ?')
