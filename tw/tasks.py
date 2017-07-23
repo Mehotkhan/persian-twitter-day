@@ -37,7 +37,13 @@ def tweet_cloud(from_date, from_time, max_words=1000):
         f_time = float(from_time)
 
     # pool = Pool(processes=4)
-    TweetCloud.send_text_cloud(f_date, from_time, max_words)
+    # TweetCloud.send_text_cloud(from_date=f_date, from_time=from_time, max_words=max_words)
     # pool.apply_async(TweetCloud.send_text_cloud, args=(f_date, from_time, max_words))
     # pool.close()
     # pool.join()
+    command_cloud = TweetCloud()
+    MessageBoot.send('im going to generate Text CLOUD')
+    command_cloud.generate(from_date=f_date, from_time=f_time,
+                           max_words=max_words)
+    command_cloud.send()
+    MessageBoot.send('Text Cloud send')
