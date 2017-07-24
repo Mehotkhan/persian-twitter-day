@@ -35,15 +35,15 @@ class TweetChart(object):
             if from_date == to_date and from_date == "Today":
                 # Read the whole text.
                 self.to_date = datetime.date.today()
-                self.date_list = [(self.to_date - datetime.timedelta(x)) for x in range(-24, 1)]
+                self.date_list = [(self.to_date - datetime.timedelta(x)) for x in range(-24, 2)]
             elif isinstance(from_date, int) and to_date == "Today":
                 self.to_date = datetime.date.today()
-                self.date_list = [(self.to_date + datetime.timedelta(x)) for x in range(from_date, 1)]
+                self.date_list = [(self.to_date + datetime.timedelta(x)) for x in range(from_date, 2)]
         if from_time and to_time:
             if isinstance(from_time, int) and to_time == "Now":
                 self.to_date = datetime.datetime.now().replace(tzinfo=tz.tzlocal())
                 self.date_list = [(self.to_date + datetime.timedelta(hours=x)).replace(tzinfo=tz.tzlocal()) for x in
-                                  range(from_time, 1)]
+                                  range(from_time, 2)]
         tw_count = []
         quotes_count = []
         retweet_count = []
@@ -395,12 +395,14 @@ class EmojiTrend(object):
             new_emoji = '\n' + name
             if len(status_text) + len(new_emoji) < 140:
                 status_text += new_emoji
+        print(status_text)
+        exit()
         api.update_status(status=status_text)
 
     @staticmethod
     def send_data(f_date, f_time):
         command_cloud = EmojiTrend()
-        MessageBoot.send('im going to generate emoji trends')
+        # MessageBoot.send('im going to generate emoji trends')
         command_cloud.generate(from_date=f_date, from_time=f_time, emoji_count=8)
         command_cloud.send()
-        MessageBoot.send('emoji trends send')
+        # MessageBoot.send('emoji trends send')
