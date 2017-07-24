@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from tw.views import TweetCloud, TweetChart, HashtagTrend
+from tw.views import EmojiTrend
 
 
 class Command(BaseCommand):
@@ -21,4 +21,4 @@ class Command(BaseCommand):
         else:
             from_time = options['from_time']
 
-        HashtagTrend.send_hashtags_trends(from_date, from_time)
+        EmojiTrend.send_data(from_date, from_time)

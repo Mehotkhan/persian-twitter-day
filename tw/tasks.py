@@ -2,7 +2,7 @@ import datetime
 import tweepy
 from celery import shared_task
 from tw.models import MessageBoot
-from tw.views import TweetCloud, TweetChart
+from tw.views import TweetCloud, TweetChart, HashtagTrend
 from tw_analysis.settings.local_settings import api
 from tw_analysis.settings.local_settings import ADMIN_TW_ACCOUNT
 # from multiprocessing import Pool
@@ -69,4 +69,4 @@ def hashtags_trends(from_date, from_time):
     else:
         from_time = from_time
 
-    TweetChart.send_tweet_chart(from_date, from_time)
+    HashtagTrend.send_hashtags_trends(from_date, from_time)

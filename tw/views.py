@@ -336,9 +336,71 @@ class HashtagTrend(object):
         return re.sub(pattern, lambda m: dic[m.group()], text)
 
     @staticmethod
-    def send_tweet_chart(f_date, f_time):
+    def send_hashtags_trends(f_date, f_time):
         command_cloud = HashtagTrend()
         MessageBoot.send('im going to generate Hashtags trends')
         command_cloud.generate(from_date=f_date, from_time=f_time, hashtag_count=15)
         command_cloud.send()
         MessageBoot.send('Hashtags trends send')
+
+
+class EmojiTrend(object):
+    def __init__(self):
+        self.file_names = []
+        self.d = path.dirname(__file__)
+        self.all_tweets_count = None
+        self.from_date = None
+        self.from_time = None
+        self.to_date = None
+        self.f_time = None
+        self.emoji = None
+
+    def generate(self, from_date=None, to_date="Today", from_time=None, to_time="Now", emoji_count=10):
+        if from_time:
+            self.f_time = abs(from_time)
+        # if from_date:
+        #     self.from_date = abs(from_date)
+        if from_date and to_date:
+            if from_date == to_date and from_date == "Today":
+                # Read the whole text.
+                self.from_date = datetime.date.today() - datetime.timedelta(1)
+                self.to_date = datetime.date.today()
+            elif isinstance(from_date, int) and to_date == "Today":
+                self.from_date = datetime.date.today() + datetime.timedelta(from_date)
+                self.to_date = datetime.date.today()
+        if from_time and to_time:
+            if isinstance(from_time, int) and to_time == "Now":
+                self.from_date = datetime.datetime.now() + datetime.timedelta(hours=from_time)
+                self.to_date = datetime.datetime.now()
+        all_tweets = Analysis.objects(
+            Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
+            &
+            Q(create_date__gte=self.from_date.replace(tzinfo=tz.tzlocal()))
+            &
+            Q(hashtags__ne=[])
+
+        ).all()
+        self.all_tweets_count = len(all_tweets)
+        all_emoji = []
+        for item in all_tweets:
+            all_emoji += re.findall(r'[^\w\s,]', item.text)
+        count_all = Counter()
+        count_all.update(all_emoji)
+        self.emoji = count_all.most_common(emoji_count)
+        print(self.emoji)
+
+    def send(self):
+        status_text = 'هشتگ های داغِ {} ساعت گذشته:'.format(int(self.f_time))
+        for name, count in self.emoji:
+            new_hashtag = '\n#' + name
+            if len(status_text) + len(new_hashtag) < 140:
+                status_text += new_hashtag
+        api.update_status(status=status_text)
+
+    @staticmethod
+    def send_data(f_date, f_time):
+        command_cloud = EmojiTrend()
+        # MessageBoot.send('im going to generate Hashtags trends')
+        command_cloud.generate(from_date=f_date, from_time=f_time, emoji_count=15)
+        # command_cloud.send()
+        # MessageBoot.send('Hashtags trends send')
