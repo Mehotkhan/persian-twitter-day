@@ -56,3 +56,17 @@ def tweet_chart(from_date, from_time):
         from_time = from_time
 
     TweetChart.send_tweet_chart(from_date, from_time)
+
+
+@shared_task
+def hashtags_trends(from_date, from_time):
+    if from_date == 0:
+        from_date = None
+    else:
+        from_date = from_date
+    if from_time == 0:
+        from_time = None
+    else:
+        from_time = from_time
+
+    TweetChart.send_tweet_chart(from_date, from_time)
