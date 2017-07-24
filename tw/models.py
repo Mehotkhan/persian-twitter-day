@@ -209,6 +209,8 @@ class FetchStream(object):
             #     # Or however you want to exit this loop
             #     stream.disconnect()
             #     break
+        except:
+            pass
 
 
 class MessageBoot(object):
