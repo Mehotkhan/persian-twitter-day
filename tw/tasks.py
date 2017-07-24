@@ -69,10 +69,10 @@ def hashtags_trends(from_date, from_time):
     else:
         from_time = from_time
 
-    HashtagTrend.send_hashtags_trends(from_date, from_time) \
-    @ shared_task
+    HashtagTrend.send_hashtags_trends(from_date, from_time)
 
 
+@shared_task
 def emoji_trends(from_date, from_time):
     if from_date == 0:
         from_date = None
