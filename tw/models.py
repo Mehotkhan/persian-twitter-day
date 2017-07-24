@@ -1,9 +1,7 @@
 import datetime
+import time
 import json
 import re
-import threading
-from http.client import IncompleteRead
-from billiard.pool import Pool
 from tweepy import StreamListener, Stream, OAuthHandler
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import *
@@ -210,6 +208,8 @@ class FetchStream(object):
         #     #     stream.disconnect()
         #     #     break
         except Exception as e:
+            time.sleep(1)
+            print('i\'m error :((')
             print(e)
             pass
 
