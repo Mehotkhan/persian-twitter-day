@@ -2,7 +2,7 @@ import datetime
 import tweepy
 from celery import shared_task
 from tw.models import MessageBoot
-from tw.views import TweetCloud, TweetChart, HashtagTrend
+from tw.views import TweetCloud, TweetChart, HashtagTrend, EmojiTrend
 from tw_analysis.settings.local_settings import api
 from tw_analysis.settings.local_settings import ADMIN_TW_ACCOUNT
 # from multiprocessing import Pool
@@ -69,4 +69,18 @@ def hashtags_trends(from_date, from_time):
     else:
         from_time = from_time
 
-    HashtagTrend.send_hashtags_trends(from_date, from_time)
+    HashtagTrend.send_hashtags_trends(from_date, from_time) \
+    @ shared_task
+
+
+def emoji_trends(from_date, from_time):
+    if from_date == 0:
+        from_date = None
+    else:
+        from_date = from_date
+    if from_time == 0:
+        from_time = None
+    else:
+        from_time = from_time
+
+    EmojiTrend.send_data(from_date, from_time)

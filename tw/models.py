@@ -2,6 +2,8 @@ import datetime
 import time
 import json
 import re
+from http.client import IncompleteRead
+
 from tweepy import StreamListener, Stream, OAuthHandler
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import *
@@ -193,25 +195,21 @@ class FetchStream(object):
     @staticmethod
     def fetch():
         print('hello')
-        # while True:
-        try:
-            l = PersianListener()
-            auth = OAuthHandler(consumer_key_data, consumer_secret_data)
-            auth.set_access_token(access_token_data, access_token_secret_data)
-            stream = Stream(auth, l)
-            stream.userstream("with=following")
-        # except IncompleteRead:
-        #     # Oh well, reconnect and keep trucking
-        #     pass
-        #     # except KeyboardInterrupt:
-        #     #     # Or however you want to exit this loop
-        #     #     stream.disconnect()
-        #     #     break
-        except Exception as e:
-            time.sleep(1)
-            print('i\'m error :((')
-            print(e)
-            pass
+        while True:
+            try:
+                l = PersianListener()
+                auth = OAuthHandler(consumer_key_data, consumer_secret_data)
+                auth.set_access_token(access_token_data, access_token_secret_data)
+                stream = Stream(auth, l)
+                stream.userstream("with=following")
+            except IncompleteRead:
+                time.sleep(1)
+                continue
+            except Exception as e:
+                time.sleep(1)
+                print('i\'m error :((')
+                print(e)
+                continue
 
 
 class MessageBoot(object):

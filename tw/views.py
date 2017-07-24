@@ -5,6 +5,7 @@ from collections import Counter
 import jdatetime
 import pygal
 from mongoengine import Q
+import emoji
 from tw.models import MessageBoot
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import api
@@ -383,24 +384,25 @@ class EmojiTrend(object):
         self.all_tweets_count = len(all_tweets)
         all_emoji = []
         for item in all_tweets:
-            all_emoji += re.findall(r'[^\w\s,]', item.text)
+            all_emoji += (c for c in item.text if c in emoji.UNICODE_EMOJI)
         count_all = Counter()
         count_all.update(all_emoji)
         self.emoji = count_all.most_common(emoji_count)
         print(self.emoji)
 
     def send(self):
-        status_text = 'هشتگ های داغِ {} ساعت گذشته:'.format(int(self.f_time))
+        status_text = 'ایموجی های داغِ {} ساعت گذشته:'.format(int(self.f_time))
         for name, count in self.emoji:
-            new_hashtag = '\n#' + name
-            if len(status_text) + len(new_hashtag) < 140:
-                status_text += new_hashtag
+            new_emoji = '\n' + name
+            if len(status_text) + len(new_emoji) < 140:
+                status_text += new_emoji
+        print(status_text)
         api.update_status(status=status_text)
 
     @staticmethod
     def send_data(f_date, f_time):
         command_cloud = EmojiTrend()
-        # MessageBoot.send('im going to generate Hashtags trends')
-        command_cloud.generate(from_date=f_date, from_time=f_time, emoji_count=15)
-        # command_cloud.send()
-        # MessageBoot.send('Hashtags trends send')
+        MessageBoot.send('im going to generate emoji trends')
+        command_cloud.generate(from_date=f_date, from_time=f_time, emoji_count=8)
+        command_cloud.send()
+        MessageBoot.send('emoji trends send')
