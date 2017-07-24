@@ -388,7 +388,6 @@ class EmojiTrend(object):
         count_all = Counter()
         count_all.update(all_emoji)
         self.emoji = count_all.most_common(emoji_count)
-        print(self.emoji)
 
     def send(self):
         status_text = 'ایموجی های داغِ {} ساعت گذشته:'.format(int(self.f_time))
@@ -396,7 +395,6 @@ class EmojiTrend(object):
             new_emoji = '\n' + name
             if len(status_text) + len(new_emoji) < 140:
                 status_text += new_emoji
-        print(status_text)
         api.update_status(status=status_text)
 
     @staticmethod
