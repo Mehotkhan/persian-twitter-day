@@ -14,3 +14,4 @@ hazm
 gunicorn
 pygal
 cairosvg
+emoji
