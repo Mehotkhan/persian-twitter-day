@@ -202,14 +202,15 @@ class FetchStream(object):
             auth.set_access_token(access_token_data, access_token_secret_data)
             stream = Stream(auth, l)
             stream.userstream("with=following")
-        except IncompleteRead:
-            # Oh well, reconnect and keep trucking
-            pass
-            # except KeyboardInterrupt:
-            #     # Or however you want to exit this loop
-            #     stream.disconnect()
-            #     break
-        except:
+        # except IncompleteRead:
+        #     # Oh well, reconnect and keep trucking
+        #     pass
+        #     # except KeyboardInterrupt:
+        #     #     # Or however you want to exit this loop
+        #     #     stream.disconnect()
+        #     #     break
+        except Exception as e:
+            print(e)
             pass
 
 
