@@ -229,7 +229,7 @@ class TweetCloud(object):
         text = ' '.join(all_words)
         twitter_mask = np.array(Image.open(path.join(self.d, "image/twitter-logo.jpg")))
         # Generate a word cloud image
-        stopwords = add_stop_words(['توییت', 'توییتر'])
+        stopwords = add_stop_words(['توییت', 'رو', 'توییتر'])
         self.tweet_cloud = PersianWordCloud(
             only_persian=True,
             max_words=max_words,
