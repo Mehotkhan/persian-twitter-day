@@ -162,7 +162,7 @@ class TweetChart(object):
             status_text = "چارت توییت های {} ساعت گذشته\n در تاریخ {} از {} توییت ".format(
                 self.from_time,
                 jdatetime.datetime.fromgregorian(datetime=datetime.datetime.now()).strftime(
-                    '%m/%d - %H:%m'),
+                    '%H:%m - %m/%d'),
                 self.all_tweets_count,
             )
         if self.from_date:
@@ -256,7 +256,7 @@ class TweetCloud(object):
         status_text = "ابر کلمات {} ساعت گذشته \n در تاریخ {} \n از {} توییت".format(
             int(self.from_time),
             jdatetime.datetime.fromgregorian(datetime=datetime.datetime.now()).strftime(
-                '%m/%d - %H:%m'),
+                '%H:%m - %m/%d'),
             self.all_tweets_count,
         )
         api.update_status(status=status_text, media_ids=media_ids)
@@ -317,10 +317,10 @@ class HashtagTrend(object):
         self.hashtags = count_all.most_common(hashtag_count)
 
     def send(self):
-        status_text = 'هشتگ های داغِ {} ساعت گذشته\nدر تاریخ {}:'.format(
+        status_text = 'هشتگ های داغِ {} ساعت گذشته\nدر تاریخ {} :'.format(
             int(self.f_time),
             jdatetime.datetime.fromgregorian(datetime=datetime.datetime.now()).strftime(
-                '%m/%d - %H:%m')
+                '%H:%m - %m/%d')
         )
         for name, count in self.hashtags:
             new_hashtag = '\n#' + name
@@ -398,11 +398,11 @@ class EmojiTrend(object):
         self.emoji = count_all.most_common(emoji_count)
 
     def send(self):
-        status_text = 'ایموجی های داغِ {} ساعت گذشته\nدر تاریخ {}:'.format(
+        status_text = 'ایموجی های داغِ {} ساعت گذشته\nدر تاریخ {} :'.format(
             int(self.f_time),
             jdatetime.datetime.fromgregorian(
                 datetime=datetime.datetime.now()).strftime(
-                '%m/%d - %H:%m'))
+                '%H:%m - %m/%d'))
         for name, count in self.emoji:
             new_emoji = '\n' + name
             if len(status_text) + len(new_emoji) < 140:
