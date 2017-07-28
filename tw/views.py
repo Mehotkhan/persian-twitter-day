@@ -1,19 +1,20 @@
 import datetime
 import re
 from collections import Counter
+from os import path
 
-import jdatetime
-import pygal
-from mongoengine import Q
 import emoji
-from tw.models import MessageBoot
+import jdatetime
+import numpy as np
+import pygal
+from PIL import Image
+from dateutil import tz
+from mongoengine import Q
+from persian_wordcloud.wordcloud import PersianWordCloud, add_stop_words
+
+from libs.models import MessageBoot
 from tw.mongo_model import Analysis
 from tw_analysis.settings.local_settings import api
-from persian_wordcloud.wordcloud import PersianWordCloud, add_stop_words
-from os import path
-from PIL import Image
-import numpy as np
-from dateutil import tz
 
 
 class TweetChart(object):
@@ -213,7 +214,7 @@ class TweetCloud(object):
             Q(user_mentions=[])
 
         ).all()
-        self.all_tweets_count = len(all_tweets)
+        self.all_tweets_count = all_tweets.count()
         all_words = []
         for item in all_tweets:
             tw_text = item.clean_text
@@ -311,10 +312,28 @@ class HashtagTrend(object):
         all_hashtags = []
         for item in all_tweets:
             for hashtag in item.hashtags:
-                all_hashtags.append(self.remove_ar(hashtag['text']))
+                hashtag = {
+                    'title': self.remove_ar(hashtag['text']),
+                    'user': item.user_id
+                }
+                all_hashtags.append(hashtag)
+        final_hash_lists = []
+        for hashtag in all_hashtags:
+            count = self.hashtag_user_count(all_hashtags, hashtag['title'])
+            final_hash_lists += [hashtag['title']] * count
+
         count_all = Counter()
-        count_all.update(all_hashtags)
+        count_all.update(final_hash_lists)
         self.hashtags = count_all.most_common(hashtag_count)
+
+    @staticmethod
+    def hashtag_user_count(hashtags, hashtag):
+        user = []
+        for item in hashtags:
+
+            if item['title'] == hashtag:
+                user.append(item['user'])
+        return len(set(user))
 
     def send(self):
         status_text = 'هشتگ های داغِ {} ساعت گذشته\nدر تاریخ {} :'.format(
@@ -385,17 +404,33 @@ class EmojiTrend(object):
             Q(create_date__lt=self.to_date.replace(tzinfo=tz.tzlocal()))
             &
             Q(create_date__gte=self.from_date.replace(tzinfo=tz.tzlocal()))
-            &
-            Q(hashtags__ne=[])
 
         ).all()
         self.all_tweets_count = len(all_tweets)
         all_emoji = []
         for item in all_tweets:
-            all_emoji += (c for c in item.text if c in emoji.UNICODE_EMOJI)
+            for emoji_item in (c for c in item.text if c in emoji.UNICODE_EMOJI):
+                the_emoji = {
+                    "title": emoji_item,
+                    "user": item.user_id
+                }
+                all_emoji.append(the_emoji)
+        final_emoji_lists = []
+        for the_emoji in all_emoji:
+            count = self.emoji_user_count(all_emoji, the_emoji['title'])
+            final_emoji_lists += [the_emoji['title']] * count
         count_all = Counter()
-        count_all.update(all_emoji)
+        count_all.update(final_emoji_lists)
         self.emoji = count_all.most_common(emoji_count)
+
+    @staticmethod
+    def emoji_user_count(all_emoji, the_emoji):
+        user = []
+        for item in all_emoji:
+
+            if item['title'] == the_emoji:
+                user.append(item['user'])
+        return len(set(user))
 
     def send(self):
         status_text = 'ایموجی های داغِ {} ساعت گذشته\nدر تاریخ {} :'.format(

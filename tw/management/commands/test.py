@@ -1,11 +1,8 @@
 import datetime
 
-import jdatetime
-from django.core.management.base import BaseCommand
-from tw.models import FetchTweets
-from django_celery_beat.models import PeriodicTask, PeriodicTasks
-from django.utils import timezone
 import pytz
+from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 
 class Command(BaseCommand):

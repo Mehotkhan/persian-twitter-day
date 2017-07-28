@@ -1,9 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 import os
-from celery import Celery, shared_task, task
-from celery.signals import worker_ready
 
-from tw.models import FetchStream, MessageBoot
+from celery import Celery, shared_task
+from celery.signals import worker_ready
+from libs.models import FetchStream
 from tw_analysis.settings.local_settings import REDIS
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tw_analysis.settings.base')
@@ -47,5 +47,3 @@ def start_up():
 def at_start(sender, **k):
     with sender.app.connection() as conn:
         start_up.apply_async()
-
-# start_up.delay()
