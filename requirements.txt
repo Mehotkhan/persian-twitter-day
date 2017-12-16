@@ -1,4 +1,4 @@
-django
+django==1.11
 celery==4.0.2
 django_redis
 mongoengine
