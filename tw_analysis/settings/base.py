@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+
 from mongoengine import connect
+
 from .local_settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -96,6 +98,8 @@ USE_L10N = True
 
 USE_TZ = True
 STATIC_URL = '/static/'
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, '../../static')
 CELERY_BROKER_URL = REDIS
 CELERY_RESULT_BACKEND = REDIS
 CELERY_ACCEPT_CONTENT = ['application/json']
