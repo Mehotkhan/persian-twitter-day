@@ -343,7 +343,7 @@ class HashtagTrend(object):
         )
         for name, count in self.hashtags:
             new_hashtag = '\n#' + name
-            if len(status_text) + len(new_hashtag) < 140:
+            if len(status_text) + len(new_hashtag) < 280:
                 status_text += new_hashtag
         api.update_status(status=status_text)
 
@@ -440,7 +440,7 @@ class EmojiTrend(object):
                 '%H:%m - %m/%d'))
         for name, count in self.emoji:
             new_emoji = '\n' + name
-            if len(status_text) + len(new_emoji) < 140:
+            if len(status_text) + len(new_emoji) < 200:
                 status_text += new_emoji
         api.update_status(status=status_text)
 
